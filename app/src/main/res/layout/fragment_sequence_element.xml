@@ -1,0 +1,92 @@
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" tools:context="com.mm.caju.SequenceElement">
+
+    <!-- TODO: Update blank fragment layout -->
+
+    <RelativeLayout
+        tools:context=".SequenceElementFragment"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/relativeLayout" >
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/editText"
+            android:autoText="false"
+            android:elegantTextHeight="true"
+            android:layout_alignParentTop="false"
+            android:singleLine="true"
+            android:longClickable="false"
+            android:alpha="1"
+            android:textIsSelectable="false"
+            android:layout_centerVertical="true"
+            android:layout_alignParentEnd="false"
+            android:layout_alignParentRight="false"
+            android:layout_toRightOf="@+id/imageView2"
+            android:editable="true"
+            android:inputType="text"
+            android:enabled="true"
+            android:hint="..."
+            android:textStyle="italic"
+            android:visibility="invisible" />
+
+        <ImageView
+            android:id="@+id/imageView2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="false"
+            android:layout_alignParentTop="false"
+            android:src="@android:drawable/ic_menu_add"
+            android:contentDescription="..."
+            android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/textView"
+            android:padding="@dimen/abc_action_bar_default_padding_material" />
+
+        <ImageView
+            android:id="@+id/imageView3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="false"
+            android:layout_alignParentTop="false"
+            android:src="@android:drawable/ic_menu_add"
+            android:contentDescription=""
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/textView"
+            android:padding="@dimen/abc_action_bar_default_padding_material" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textAppearance="?android:attr/textAppearanceSmall"
+            android:text="."
+            android:layout_centerInParent="true"
+            android:id="@+id/textView" />
+
+        <EditText
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/editText2"
+            android:autoText="false"
+            android:elegantTextHeight="true"
+            android:layout_alignParentTop="false"
+            android:singleLine="true"
+            android:longClickable="false"
+            android:alpha="1"
+            android:textIsSelectable="true"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/imageView3"
+            android:layout_alignParentStart="false"
+            android:layout_alignParentLeft="false"
+            android:editable="true"
+            android:hint="..."
+            android:inputType="text"
+            android:enabled="true"
+            android:textStyle="italic"
+            android:visibility="invisible" />
+    </RelativeLayout>
+
+</FrameLayout>
