@@ -160,6 +160,7 @@ public class SequenceEditorFragment extends Fragment {
          * fill SeqEd with elements
          * */
 
+
         LinearLayout seqLayout = (LinearLayout) rootView.findViewById(R.id.layout_seq);
 
         /** REUSE iterator **/
