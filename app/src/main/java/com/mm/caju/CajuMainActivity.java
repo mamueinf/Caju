@@ -262,7 +262,7 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
         movLib.addDefMovementToDefMovList(coc);
 
         DefMovement esq = new DefMovement();
-        esq.setMovName("Esqiva");
+        esq.setMovName("Esquiva");
         esq.setMovIconID(R.mipmap.ic_defmov_esq);
         movLib.addDefMovementToDefMovList(esq);
 
@@ -273,12 +273,12 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
         movLib.addOffMovementToOffMovList(rdA);
 
         OffMovement mLdF = new OffMovement();
-        mLdF.setMovName("Meia Lua de Frente");
+        mLdF.setMovName("Meia Lua de frente");
         mLdF.setMovIconID(R.mipmap.ic_offmov_mldf);
         movLib.addOffMovementToOffMovList(mLdF);
 
         OffMovement mLdC = new OffMovement();
-        mLdC.setMovName("Meia Lua de Costa");
+        mLdC.setMovName("Meia Lua de costa");
         mLdC.setMovIconID(R.mipmap.ic_offmov_mldc);
         movLib.addOffMovementToOffMovList(mLdC);
 
@@ -296,6 +296,11 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
         rast.setMovName("Rasteira");
         rast.setMovIconID(R.mipmap.ic_offmov_rast);
         movLib.addOffMovementToOffMovList(rast);
+
+        OffMovement tes = new OffMovement();
+        tes.setMovName("Tessoura");
+        tes.setMovIconID(R.mipmap.ic_offmov_tes);
+        movLib.addOffMovementToOffMovList(tes);
 
         OffMovement cab = new OffMovement();
         cab.setMovName("Cabecada");
@@ -323,6 +328,11 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
         vdj.setMovIconID(R.mipmap.ic_miscmov_vdj);
         movLib.addMiscMovementToMiscMovList(vdj);
 
+        MiscMovement fint = new MiscMovement();
+        fint.setMovName("Finta");
+        fint.setMovIconID(R.mipmap.ic_miscmov_fint);
+        movLib.addMiscMovementToMiscMovList(fint);
+
         MiscMovement pass = new MiscMovement();
         pass.setMovName("Passada");
         pass.setMovIconID(R.mipmap.ic_miscmov_pass);
@@ -337,6 +347,16 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
         ban.setMovName("Bananeira");
         ban.setMovIconID(R.mipmap.ic_miscmov_ban);
         movLib.addMiscMovementToMiscMovList(ban);
+
+        MiscMovement qdr = new MiscMovement();
+        qdr.setMovName("Queda de Rins");
+        qdr.setMovIconID(R.mipmap.ic_miscmov_qdr);
+        movLib.addMiscMovementToMiscMovList(qdr);
+
+        MiscMovement qd4 = new MiscMovement();
+        qd4.setMovName("Queda de Quatro");
+        qd4.setMovIconID(R.mipmap.ic_miscmov_qd4);
+        movLib.addMiscMovementToMiscMovList(qd4);
 
 
         /* Serialize the MovLib for next time */
