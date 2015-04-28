@@ -10,13 +10,11 @@ import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
 import android.widget.ListAdapter;
 import android.widget.TextView;
 
-import com.mm.caju.caju_seqMdl.Movement;
+import com.mm.caju.caju_seqMdl.Sequence;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -28,7 +26,7 @@ import java.util.List;
  * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
  * interface.
  */
-public class MovementLibraryFragment2 extends Fragment implements AbsListView.OnItemClickListener {
+public class SequenceLibraryFragment extends Fragment implements AbsListView.OnItemClickListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -52,12 +50,9 @@ public class MovementLibraryFragment2 extends Fragment implements AbsListView.On
      */
     private ListAdapter mAdapter;
 
-    private static ArrayList<Movement> movArray;
-
-
     // TODO: Rename and change types of parameters
-    public static MovementLibraryFragment2 newInstance(String param1, String param2) {
-        MovementLibraryFragment2 fragment = new MovementLibraryFragment2();
+    public static SequenceLibraryFragment newInstance(String param1, String param2) {
+        SequenceLibraryFragment fragment = new SequenceLibraryFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -69,10 +64,8 @@ public class MovementLibraryFragment2 extends Fragment implements AbsListView.On
      * Mandatory empty constructor for the fragment manager to instantiate the
      * fragment (e.g. upon screen orientation changes).
      */
-    public MovementLibraryFragment2() {
+    public SequenceLibraryFragment() {
     }
-
-
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -83,19 +76,14 @@ public class MovementLibraryFragment2 extends Fragment implements AbsListView.On
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        movArray = new ArrayList();
-        movArray.addAll(CajuMainActivity.getCajuMovementLib().getMiscMovList());
-        movArray.addAll( CajuMainActivity.getCajuMovementLib().getDefMovList());
-        movArray.addAll( CajuMainActivity.getCajuMovementLib().getOffMovList());
-
-        mAdapter = new MovLibListViewAdapter(getActivity(),
-                R.layout.movlib_list_item, movArray);
+        mAdapter = new SeqLibListViewAdapter(getActivity(),
+                R.layout.seqlib_list_item, CajuMainActivity.getCajuSequenceLib().getSequenceList() );
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_movementlibrary, container, false);
+        View view = inflater.inflate(R.layout.fragment_sequencelibrary, container, false);
 
         // Set the adapter
         mListView = (AbsListView) view.findViewById(android.R.id.list);
@@ -130,7 +118,7 @@ public class MovementLibraryFragment2 extends Fragment implements AbsListView.On
         if (null != mListener) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            mListener.onMovLibFragmentInteraction( movArray.get(position).getMovName() );
+            mListener.onSeqLibFragmentInteraction( CajuMainActivity.getCajuSequenceLib().getSequenceList().get(position) );
         }
     }
 
@@ -159,43 +147,43 @@ public class MovementLibraryFragment2 extends Fragment implements AbsListView.On
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onMovLibFragmentInteraction(String id);
+        public void onSeqLibFragmentInteraction(Sequence selSeq);
     }
 
-    public class MovLibListViewAdapter extends ArrayAdapter<Movement> {
+    public class SeqLibListViewAdapter extends ArrayAdapter<Sequence> {
 
 
         Context context;
 
-        public MovLibListViewAdapter(Context context, int resourceId, //resourceId=your layout
-                                     List<Movement> items) {
+        public SeqLibListViewAdapter(Context context, int resourceId, //resourceId=your layout
+                                     List<Sequence> items) {
             super(context, resourceId, items);
             this.context = context;
         }
 
         /*private view holder class*/
         private class ViewHolder {
-            ImageView imageView;
+            TextView txtDate;
             TextView txtTitle;
         }
 
         public View getView(int position, View convertView, ViewGroup parent) {
             ViewHolder holder = null;
-            Movement rowItemMov = getItem(position);
+            Sequence rowItemSeq = getItem(position);
 
             LayoutInflater mInflater = (LayoutInflater) context
                     .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
             if (convertView == null) {
-                convertView = mInflater.inflate(R.layout.movlib_list_item, null);
+                convertView = mInflater.inflate(R.layout.seqlib_list_item, null);
                 holder = new ViewHolder();
-                holder.txtTitle = (TextView) convertView.findViewById(R.id.textView_movName);
-                holder.imageView = (ImageView) convertView.findViewById(R.id.imageView_movIcon);
+                holder.txtDate = (TextView) convertView.findViewById(R.id.textView_seqDate);
+                holder.txtTitle = (TextView) convertView.findViewById(R.id.textView_seqTitle);
                 convertView.setTag(holder);
             } else
                 holder = (ViewHolder) convertView.getTag();
 
-            holder.txtTitle.setText(rowItemMov.getMovName());
-            holder.imageView.setImageResource(rowItemMov.getMovIconID());
+            holder.txtTitle.setText(rowItemSeq.getSeqTitle());
+            holder.txtDate.setText(rowItemSeq.getDate());
 
             return convertView;
         }

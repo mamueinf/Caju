@@ -12,13 +12,16 @@ import android.widget.LinearLayout;
 
 import com.mm.caju.caju_seqMdl.DefMovement;
 import com.mm.caju.caju_seqMdl.MiscMovement;
-import com.mm.caju.caju_seqMdl.Movement;
 import com.mm.caju.caju_seqMdl.MovementLib;
 import com.mm.caju.caju_seqMdl.OffMovement;
 import com.mm.caju.caju_seqMdl.Sequence;
 import com.mm.caju.caju_seqMdl.TimeSlot;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.Iterator;
+
+import static com.mm.caju.CajuMainActivity.getCajuSequenceLib;
 
 
 /**
@@ -72,7 +75,6 @@ public class SequenceEditorFragment extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        currentSequence = createExampleSequence();
     }
 
     @Override
@@ -163,31 +165,25 @@ public class SequenceEditorFragment extends Fragment {
 
         LinearLayout seqLayout = (LinearLayout) rootView.findViewById(R.id.layout_seq);
 
-        /** REUSE iterator **/
-        it = currentSequence.getTimeslots().iterator();
-        while (it.hasNext()) {
+        if ( currentSequence != null ) {
+            /** REUSE iterator **/
+            it = currentSequence.getTimeslots().iterator();
+            while (it.hasNext()) {
 
-            TimeSlot tsl = (TimeSlot) it.next();
+                TimeSlot tsl = (TimeSlot) it.next();
 
-            SequenceElement seqElFr = new SequenceElement();
+                SequenceElement seqElFr = new SequenceElement();
 
-            seqElFr.setTsl( tsl );
+                seqElFr.setTsl( tsl );
 
-            getFragmentManager().beginTransaction()
-                    .add(R.id.layout_seq, seqElFr)
-                    .commit();
-
-//            ImageView topMovIconView = (ImageView) this.getView().findViewById(R.id.imageView_top);
-//            topMovIconView.setImageDrawable( getResources().getDrawable( tsl.getTopPlayerMov().getMovIconID() ) );
-//
-//            ImageView botMovIconView = (ImageView) this.getView().findViewById(R.id.imageView_bot);
-//            botMovIconView.setImageDrawable( getResources().getDrawable( tsl.getBotPlayerMov().getMovIconID() ) );
-
-
+                getFragmentManager().beginTransaction()
+                        .add(R.id.layout_seq, seqElFr)
+                        .commit();
+            }
         }
 
 
-         return rootView;
+        return rootView;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -195,6 +191,21 @@ public class SequenceEditorFragment extends Fragment {
         if (mListener != null) {
             mListener.onSeqEdFragmentInteraction(uri);
         }
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy-HH:mm");
+        String formattedDate = df.format(Calendar.getInstance().getTime());
+
+        if ( currentSequence != null) {
+            currentSequence.setDate(formattedDate);
+            if ( !getCajuSequenceLib().getSequenceList().contains( currentSequence ) )
+                getCajuSequenceLib().addSequenceToSequenceList( currentSequence );
+        }
+        ((CajuMainActivity)getActivity()).saveSeqLib();
     }
 
     @Override
@@ -214,53 +225,7 @@ public class SequenceEditorFragment extends Fragment {
         mListener = null;
     }
 
-    private Sequence createExampleSequence(){
 
-        MovementLib cajuMovementLib = ((CajuMainActivity)getActivity()).getCajuMovementLib();
-
-        Sequence seq = new Sequence();
-
-        TimeSlot t1 = new TimeSlot();
-        t1.setTime(1);
-
-        Iterator it = cajuMovementLib.getMiscMovList().iterator();
-        while ( it.hasNext() ) {
-
-            Movement mov = (Movement) it.next();
-            if ( mov.getMovName().equals("Ginga")) {
-                t1.setTopPlayerMov(mov);
-                t1.setBotPlayerMov(mov);
-                break;
-            }
-        }
-
-        TimeSlot t2 = new TimeSlot();
-        t2.setTime(2);
-
-        it = cajuMovementLib.getOffMovList().iterator();
-        while ( it.hasNext() ) {
-
-            Movement mov = (Movement) it.next();
-            if ( mov.getMovName().equals("Rabo de Arraia")) {
-                t2.setTopPlayerMov(mov);
-                break;
-            }
-        }
-        it = cajuMovementLib.getDefMovList().iterator();
-        while ( it.hasNext() ) {
-
-            Movement mov = (Movement) it.next();
-            if ( mov.getMovName().equals("Negativa de Angola")) {
-                t2.setBotPlayerMov(mov);
-                break;
-            }
-        }
-
-        seq.addTimeSlotToTimeslots(t1);
-        seq.addTimeSlotToTimeslots(t2);
-
-        return seq;
-    }
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -276,4 +241,16 @@ public class SequenceEditorFragment extends Fragment {
         public void onSeqEdFragmentInteraction(Uri uri);
     }
 
+
+    /**
+     * Getters and Setters
+     * */
+
+    public Sequence getCurrentSequence() {
+        return currentSequence;
+    }
+
+    public void setCurrentSequence(Sequence currentSequence) {
+        this.currentSequence = currentSequence;
+    }
 }

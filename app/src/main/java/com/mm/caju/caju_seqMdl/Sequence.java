@@ -24,6 +24,11 @@ public class Sequence {
 	 */
 	private String seqTitle = "";
 
+	/**
+	 * Description of the property date.
+	 */
+	private String date = "";
+
 	// Start of user code (user defined attributes for Sequence)
 
 	// End of user code
@@ -103,6 +108,22 @@ public class Sequence {
 	 */
 	public void setSeqTitle(String newSeqTitle) {
 		this.seqTitle = newSeqTitle;
+	}
+
+	/**
+	 * Returns date.
+	 * @return date 
+	 */
+	public String getDate() {
+		return this.date;
+	}
+
+	/**
+	 * Sets a value to attribute date. 
+	 * @param newDate 
+	 */
+	public void setDate(String newDate) {
+		this.date = newDate;
 	}
 
 }

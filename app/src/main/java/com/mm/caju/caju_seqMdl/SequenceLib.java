@@ -3,7 +3,7 @@
  *******************************************************************************/
 package com.mm.caju.caju_seqMdl;
 
-import java.util.LinkedHashSet;
+import java.util.ArrayList;
 // Start of user code (user defined imports)
 
 // End of user code
@@ -17,7 +17,7 @@ public class SequenceLib {
 	/**
 	 * Description of the property sequenceList.
 	 */
-	public LinkedHashSet<Sequence> sequenceList = new LinkedHashSet<Sequence>();
+	public ArrayList<Sequence> sequenceList = new ArrayList<Sequence>();
 
 	// Start of user code (user defined attributes for SequenceLib)
 
@@ -39,7 +39,7 @@ public class SequenceLib {
 	 * Returns sequenceList.
 	 * @return sequenceList 
 	 */
-	public LinkedHashSet<Sequence> getSequenceList() {
+	public ArrayList<Sequence> getSequenceList() {
 		return this.sequenceList;
 	}
 
@@ -47,7 +47,7 @@ public class SequenceLib {
 	 * Sets a value to attribute sequenceList. 
 	 * @param newSequenceList 
 	 */
-	public void setSequenceList(LinkedHashSet<Sequence> newSequenceList) {
+	public void setSequenceList(ArrayList<Sequence> newSequenceList) {
 		this.sequenceList = newSequenceList;
 	}
 
@@ -71,8 +71,7 @@ public class SequenceLib {
 	 * Adds all the attribute (if sequenceList had a multiple cardinality)
 	 * @param sequencesToAdd in sequenceList
 	 */
-	public void addAllSequenceToSequenceList(
-			LinkedHashSet<Sequence> sequencesToAdd) {
+	public void addAllSequenceToSequenceList(ArrayList<Sequence> sequencesToAdd) {
 		this.sequenceList.addAll(sequencesToAdd);
 	}
 
@@ -81,7 +80,7 @@ public class SequenceLib {
 	 * @param sequencesToRemove in sequenceList
 	 */
 	public void removeAllSequenceToSequenceList(
-			LinkedHashSet<Sequence> sequencesToRemove) {
+			ArrayList<Sequence> sequencesToRemove) {
 		this.sequenceList.removeAll(sequencesToRemove);
 	}
 

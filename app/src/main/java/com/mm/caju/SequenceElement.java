@@ -4,9 +4,14 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.net.Uri;
 import android.os.Bundle;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.EditText;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.mm.caju.caju_seqMdl.TimeSlot;
 
@@ -68,7 +73,79 @@ public class SequenceElement extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_sequence_element, container, false);
+        View view = inflater.inflate(R.layout.fragment_sequence_element, container, false);
+
+        return view;
+    }
+
+    @Override
+    public void onViewCreated(View view, Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
+
+        TextView timeView = (TextView) this.getView().findViewById(R.id.textView_time);
+        timeView.setText( Integer.toString(tsl.getTime()) );
+
+        ImageView topMovIconView = (ImageView) this.getView().findViewById(R.id.imageView_player_top);
+        EditText topMovNoteView = (EditText) this.getView().findViewById(R.id.editText_note_top);
+
+        if (tsl.getTopPlayerMov() == null ){
+            topMovIconView.setImageDrawable( getResources().getDrawable( R.mipmap.ic_mov_cont ) );
+            topMovNoteView.setHint( "..." );
+        } else {
+            topMovIconView.setImageDrawable( getResources().getDrawable( tsl.getTopPlayerMov().getMovIconID() ) );
+            topMovNoteView.setText( tsl.getTopPlayerMov().getMovNote() );
+            topMovNoteView.setHint( tsl.getTopPlayerMov().getMovName() );
+        }
+        topMovNoteView.addTextChangedListener( new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                getTsl().getTopPlayerMov().setMovNote( s.toString() );
+            }
+        });
+
+        ImageView botMovIconView = (ImageView) this.getView().findViewById(R.id.imageView_player_bot);
+        EditText botMovNoteView = (EditText) this.getView().findViewById(R.id.editText_note_bot);
+
+        if (tsl.getBotPlayerMov() == null ) {
+            botMovIconView.setImageDrawable( getResources().getDrawable( R.mipmap.ic_mov_cont ) );
+            botMovNoteView.setHint( "..." );
+        } else {
+            botMovIconView.setImageDrawable( getResources().getDrawable( tsl.getBotPlayerMov().getMovIconID() ) );
+            botMovNoteView.setText( tsl.getBotPlayerMov().getMovNote() );
+            botMovNoteView.setHint( tsl.getBotPlayerMov().getMovName() );
+        }
+        botMovNoteView.addTextChangedListener( new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                getTsl().getBotPlayerMov().setMovNote( s.toString() );
+            }
+        });
+
+
+
+
+
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event

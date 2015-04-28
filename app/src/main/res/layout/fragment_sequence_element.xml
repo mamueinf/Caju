@@ -15,7 +15,7 @@
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/editText"
+            android:id="@+id/editText_note_top"
             android:autoText="false"
             android:elegantTextHeight="true"
             android:layout_alignParentTop="false"
@@ -26,37 +26,36 @@
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="false"
             android:layout_alignParentRight="false"
-            android:layout_toRightOf="@+id/imageView2"
+            android:layout_toRightOf="@+id/imageView_player_top"
             android:editable="true"
             android:inputType="text"
             android:enabled="true"
             android:hint="..."
             android:textStyle="italic"
-            android:visibility="invisible" />
+            android:visibility="visible"
+            android:selectAllOnFocus="true" />
 
         <ImageView
-            android:id="@+id/imageView2"
+            android:id="@+id/imageView_player_top"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentLeft="false"
             android:layout_alignParentTop="false"
-            android:src="@android:drawable/ic_menu_add"
+            android:src="@mipmap/ic_player_bot"
             android:contentDescription="..."
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/textView"
-            android:padding="@dimen/abc_action_bar_default_padding_material" />
+            android:layout_toRightOf="@+id/textView_time" />
 
         <ImageView
-            android:id="@+id/imageView3"
+            android:id="@+id/imageView_player_bot"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="false"
             android:layout_alignParentTop="false"
-            android:src="@android:drawable/ic_menu_add"
+            android:src="@mipmap/ic_player_bot"
             android:contentDescription=""
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/textView"
-            android:padding="@dimen/abc_action_bar_default_padding_material" />
+            android:layout_toLeftOf="@+id/textView_time" />
 
         <TextView
             android:layout_width="wrap_content"
@@ -64,21 +63,22 @@
             android:textAppearance="?android:attr/textAppearanceSmall"
             android:text="."
             android:layout_centerInParent="true"
-            android:id="@+id/textView" />
+            android:id="@+id/textView_time"
+            android:padding="@dimen/abc_button_padding_vertical_material" />
 
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/editText2"
+            android:id="@+id/editText_note_bot"
             android:autoText="false"
             android:elegantTextHeight="true"
             android:layout_alignParentTop="false"
             android:singleLine="true"
             android:longClickable="false"
             android:alpha="1"
-            android:textIsSelectable="true"
+            android:textIsSelectable="false"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/imageView3"
+            android:layout_toLeftOf="@+id/imageView_player_bot"
             android:layout_alignParentStart="false"
             android:layout_alignParentLeft="false"
             android:editable="true"
@@ -86,7 +86,8 @@
             android:inputType="text"
             android:enabled="true"
             android:textStyle="italic"
-            android:visibility="invisible" />
+            android:visibility="visible"
+            android:selectAllOnFocus="true" />
     </RelativeLayout>
 
 </FrameLayout>

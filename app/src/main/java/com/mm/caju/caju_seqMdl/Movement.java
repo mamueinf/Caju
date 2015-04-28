@@ -12,21 +12,21 @@ package com.mm.caju.caju_seqMdl;
  * 
  * @author muelli
  */
-public abstract class Movement {
+public abstract class Movement implements Cloneable {
 	/**
 	 * Description of the property movName.
 	 */
 	private String movName = "";
 
 	/**
-	 * Description of the property movIconID.
-	 */
-	private int movIconID = 0;
-
-	/**
 	 * Description of the property movNote.
 	 */
 	private String movNote = "";
+
+	/**
+	 * Description of the property movIconID.
+	 */
+	private int movIconID = 0;
 
 	// Start of user code (user defined attributes for Movement)
 
@@ -42,7 +42,9 @@ public abstract class Movement {
 	}
 
 	// Start of user code (user defined methods for Movement)
-
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 	// End of user code
 	/**
 	 * Returns movName.
@@ -61,22 +63,6 @@ public abstract class Movement {
 	}
 
 	/**
-	 * Returns movIconID.
-	 * @return movIconID 
-	 */
-	public int getMovIconID() {
-		return this.movIconID;
-	}
-
-	/**
-	 * Sets a value to attribute movIconID. 
-	 * @param newMovIconID 
-	 */
-	public void setMovIconID(int newMovIconID) {
-		this.movIconID = newMovIconID;
-	}
-
-	/**
 	 * Returns movNote.
 	 * @return movNote 
 	 */
@@ -90,6 +76,22 @@ public abstract class Movement {
 	 */
 	public void setMovNote(String newMovNote) {
 		this.movNote = newMovNote;
+	}
+
+	/**
+	 * Returns movIconID.
+	 * @return movIconID 
+	 */
+	public int getMovIconID() {
+		return this.movIconID;
+	}
+
+	/**
+	 * Sets a value to attribute movIconID. 
+	 * @param newMovIconID 
+	 */
+	public void setMovIconID(int newMovIconID) {
+		this.movIconID = newMovIconID;
 	}
 
 }
