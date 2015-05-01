@@ -72,8 +72,6 @@ public class MovementLibraryFragment2 extends Fragment implements AbsListView.On
     public MovementLibraryFragment2() {
     }
 
-
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -123,7 +121,6 @@ public class MovementLibraryFragment2 extends Fragment implements AbsListView.On
         super.onDetach();
         mListener = null;
     }
-
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {

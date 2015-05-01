@@ -9,21 +9,16 @@
     android:paddingTop="@dimen/activity_vertical_margin"
     tools:context=".SequenceEditorFragment" >
 
-    <ScrollView
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/scrollView_seq"
+    <ListView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/listView_seq"
         android:layout_alignParentTop="true"
-        android:layout_above="@+id/imageView">
-
-        <LinearLayout
-            android:orientation="vertical"
-            android:layout_width="fill_parent"
-            android:layout_height="wrap_content"
-            android:id="@+id/layout_seq">
-
-        </LinearLayout>
-    </ScrollView>
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:layout_above="@+id/imageView" />
 
     <HorizontalScrollView
         android:id="@+id/horizontalScrollView_mov_misc"
@@ -93,6 +88,7 @@
         android:layout_alignParentBottom="false"
         android:layout_centerHorizontal="true"
         android:contentDescription="@string/dots"
-        android:layout_above="@+id/horizontalScrollView_mov_misc" />
+        android:layout_above="@+id/horizontalScrollView_mov_misc"
+        android:padding="@dimen/abc_action_bar_default_padding_material" />
 
 </RelativeLayout>

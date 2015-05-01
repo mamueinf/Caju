@@ -36,6 +36,7 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
 
     private static MovementLib cajuMovementLib = null;
     private static SequenceLib cajuSequenceLib = null;
+    private static Sequence currentSequence = null;
 
     private static SequenceEditorFragment mSeqEdFragment = null;
     private static SequenceLibraryFragment mSeqLibFragment = null;
@@ -98,7 +99,14 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         if (mSeqEdFragment == null) {
             mSeqEdFragment = new SequenceEditorFragment();
+            if ( currentSequence == null ) {
+                currentSequence = new Sequence();
+                currentSequence.setSeqTitle("New Sequence");
+                currentSequence.setTimeslots(new ArrayList<TimeSlot>());
+            }
+            mSeqEdFragment.setCurrentSequence( currentSequence );
         }
+
         if (!getFragmentManager().popBackStackImmediate("show_seqed", 0)){
             transaction.replace(R.id.container, mSeqEdFragment);
             transaction.addToBackStack("show_seqed");
@@ -490,7 +498,7 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
 
 
     @Override
-    public void onSeqEdFragmentInteraction(Uri uri) {
+    public void onSeqEdFragmentInteraction(int dfh) {
 
     }
 
@@ -512,12 +520,8 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
         Toast toast = Toast.makeText( getApplicationContext(), "Sequence selected for editing ...", Toast.LENGTH_SHORT);
         toast.show();
 
-        if (mSeqEdFragment == null) {
-            mSeqEdFragment = new SequenceEditorFragment();
-        }
-        mSeqEdFragment.setCurrentSequence(selSeq);
+        currentSequence = selSeq;
         showSeqEd();
-
     }
 
 
@@ -539,6 +543,14 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
 
     public static void setCajuSequenceLib(SequenceLib cajuSequenceLib) {
         CajuMainActivity.cajuSequenceLib = cajuSequenceLib;
+    }
+
+    public static Sequence getCurrentSequence() {
+        return currentSequence;
+    }
+
+    public static void setCurrentSequence(Sequence currentSequence) {
+        CajuMainActivity.currentSequence = currentSequence;
     }
 
     /**

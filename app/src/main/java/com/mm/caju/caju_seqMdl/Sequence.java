@@ -3,7 +3,7 @@
  *******************************************************************************/
 package com.mm.caju.caju_seqMdl;
 
-import java.util.LinkedHashSet;
+import java.util.ArrayList;
 // Start of user code (user defined imports)
 
 // End of user code
@@ -17,7 +17,7 @@ public class Sequence {
 	/**
 	 * Description of the property timeslots.
 	 */
-	public LinkedHashSet<TimeSlot> timeslots = new LinkedHashSet<TimeSlot>();
+	public ArrayList<TimeSlot> timeslots = new ArrayList<TimeSlot>();
 
 	/**
 	 * Description of the property seqTitle.
@@ -49,7 +49,7 @@ public class Sequence {
 	 * Returns timeslots.
 	 * @return timeslots 
 	 */
-	public LinkedHashSet<TimeSlot> getTimeslots() {
+	public ArrayList<TimeSlot> getTimeslots() {
 		return this.timeslots;
 	}
 
@@ -57,7 +57,7 @@ public class Sequence {
 	 * Sets a value to attribute timeslots. 
 	 * @param newTimeslots 
 	 */
-	public void setTimeslots(LinkedHashSet<TimeSlot> newTimeslots) {
+	public void setTimeslots(ArrayList<TimeSlot> newTimeslots) {
 		this.timeslots = newTimeslots;
 	}
 
@@ -81,7 +81,7 @@ public class Sequence {
 	 * Adds all the attribute (if timeslots had a multiple cardinality)
 	 * @param timeSlotsToAdd in timeslots
 	 */
-	public void addAllTimeSlotToTimeslots(LinkedHashSet<TimeSlot> timeSlotsToAdd) {
+	public void addAllTimeSlotToTimeslots(ArrayList<TimeSlot> timeSlotsToAdd) {
 		this.timeslots.addAll(timeSlotsToAdd);
 	}
 
@@ -90,7 +90,7 @@ public class Sequence {
 	 * @param timeSlotsToRemove in timeslots
 	 */
 	public void removeAllTimeSlotToTimeslots(
-			LinkedHashSet<TimeSlot> timeSlotsToRemove) {
+			ArrayList<TimeSlot> timeSlotsToRemove) {
 		this.timeslots.removeAll(timeSlotsToRemove);
 	}
 
