@@ -2,21 +2,13 @@ package com.mm.caju;
 
 import android.app.Activity;
 import android.app.Fragment;
-import android.content.Context;
+import android.net.Uri;
 import android.os.Bundle;
-import android.text.Editable;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AbsListView;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.ListAdapter;
-import android.widget.TextView;
 
 import com.mm.caju.caju_seqMdl.DefMovement;
 import com.mm.caju.caju_seqMdl.MiscMovement;
@@ -28,7 +20,6 @@ import com.mm.caju.caju_seqMdl.TimeSlot;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Iterator;
-import java.util.List;
 
 import static com.mm.caju.CajuMainActivity.getCajuSequenceLib;
 
@@ -41,7 +32,7 @@ import static com.mm.caju.CajuMainActivity.getCajuSequenceLib;
  * Use the {@link SequenceEditorFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SequenceEditorFragment extends Fragment implements AbsListView.OnItemClickListener {
+public class SequenceEditorFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -52,17 +43,6 @@ public class SequenceEditorFragment extends Fragment implements AbsListView.OnIt
     private String mParam2;
 
     private OnFragmentInteractionListener mListener;
-
-    /**
-     * The fragment's ListView/GridView.
-     */
-    private AbsListView mListView;
-
-    /**
-     * The Adapter which will be used to populate the ListView/GridView with
-     * Views.
-     */
-    private ListAdapter mAdapter;
 
     private Sequence currentSequence = null;
 
@@ -86,9 +66,6 @@ public class SequenceEditorFragment extends Fragment implements AbsListView.OnIt
 
     public SequenceEditorFragment() {
         // Required empty public constructor
-
-
-
     }
 
     @Override
@@ -100,9 +77,6 @@ public class SequenceEditorFragment extends Fragment implements AbsListView.OnIt
         }
 
         currentSequence = CajuMainActivity.getCurrentSequence();
-
-        mAdapter = new SeqEdListViewAdapter(getActivity(),
-                R.layout.fragment_sequence_element, currentSequence.getTimeslots() );
     }
 
     @Override
@@ -113,13 +87,6 @@ public class SequenceEditorFragment extends Fragment implements AbsListView.OnIt
 
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_sequence_editor, container, false);
-
-        // Set the adapter
-        mListView = (AbsListView) rootView.findViewById(R.id.listView_seq);
-        ((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
-
-        // Set OnItemClickListener so we can be notified on item clicks
-        mListView.setOnItemClickListener(this);
 
         /** def iterator **/
         Iterator it = null;
@@ -196,37 +163,40 @@ public class SequenceEditorFragment extends Fragment implements AbsListView.OnIt
         /**
          * fill SeqEd with elements
          * */
+        LinearLayout seqLayout = (LinearLayout) rootView.findViewById(R.id.layout_seq);
 
-
-/*        LinearLayout seqLayout = (LinearLayout) rootView.findViewById(R.id.layout_seq);
+        currentSequence = CajuMainActivity.getCurrentSequence();
 
         if ( currentSequence != null ) {
-            *//** REUSE iterator **//*
+            /** REUSE iterator **/
             it = currentSequence.getTimeslots().iterator();
             while (it.hasNext()) {
 
                 TimeSlot tsl = (TimeSlot) it.next();
-
                 SequenceElement seqElFr = new SequenceElement();
-
                 seqElFr.setTsl( tsl );
 
                 getFragmentManager().beginTransaction()
                         .add(R.id.layout_seq, seqElFr)
                         .commit();
             }
-        }*/
-
+        }
 
         return rootView;
     }
 
+    // TODO: Rename method, update argument and hook method into UI event
+    public void onButtonPressed(Uri uri) {
+        if (mListener != null) {
+            mListener.onSeqEdFragmentInteraction(uri);
+        }
+    }
 
     @Override
     public void onPause() {
         super.onPause();
 
-        SimpleDateFormat df = new SimpleDateFormat("dd-MMM-yyyy-HH:mm");
+        SimpleDateFormat df = new SimpleDateFormat("dd.MMM.yyyy-HH:mm");
         String formattedDate = df.format(Calendar.getInstance().getTime());
 
         if ( currentSequence != null) {
@@ -254,31 +224,6 @@ public class SequenceEditorFragment extends Fragment implements AbsListView.OnIt
         mListener = null;
     }
 
-    @Override
-    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-        if (null != mListener) {
-            // Notify the active callbacks interface (the activity, if the
-            // fragment is attached to one) that an item has been selected.
-            mListener.onSeqEdFragmentInteraction(currentSequence.getTimeslots().get(position).getTime());
-        }
-    }
-
-    /**
-     * The default content for this Fragment has a TextView that is shown when
-     * the list is empty. If you would like to change the text, call this method
-     * to supply the text it should use.
-     */
-    public void setEmptyText(CharSequence emptyText) {
-        View emptyView = mListView.getEmptyView();
-
-        if (emptyView instanceof TextView) {
-            ((TextView) emptyView).setText(emptyText);
-        }
-    }
-
-    public void setCurrentSequence(Sequence currentSequence) {
-        this.currentSequence = currentSequence;
-    }
 
     /**
      * This interface must be implemented by activities that contain this
@@ -292,107 +237,14 @@ public class SequenceEditorFragment extends Fragment implements AbsListView.OnIt
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onSeqEdFragmentInteraction(int dfh);
+        public void onSeqEdFragmentInteraction(Uri uri);
     }
 
 
-
-
-    public class SeqEdListViewAdapter extends ArrayAdapter<TimeSlot> {
-
-
-        Context context;
-
-        public SeqEdListViewAdapter(Context context, int resourceId, //resourceId=your layout
-                                     List<TimeSlot> items) {
-            super(context, resourceId, items);
-            this.context = context;
-        }
-
-        /*private view holder class*/
-        private class ViewHolder {
-
-            EditText textBot;
-            ImageView imageViewBot;
-            TextView txtTime;
-            ImageView imageViewTop;
-            EditText textTop;
-        }
-
-        public View getView(int position, View convertView, ViewGroup parent) {
-            ViewHolder holder = null;
-            final TimeSlot rowItemMovTsl = getItem(position);
-
-            LayoutInflater mInflater = (LayoutInflater) context
-                    .getSystemService(Activity.LAYOUT_INFLATER_SERVICE);
-            if (convertView == null) {
-                convertView = mInflater.inflate(R.layout.fragment_sequence_element, null);
-                holder = new ViewHolder();
-                holder.textBot = (EditText) convertView.findViewById(R.id.editText_note_bot);
-                holder.imageViewBot = (ImageView) convertView.findViewById(R.id.imageView_player_bot);
-                holder.txtTime = (TextView) convertView.findViewById(R.id.textView_time);
-                holder.imageViewTop = (ImageView) convertView.findViewById(R.id.imageView_player_top);
-                holder.textTop = (EditText) convertView.findViewById(R.id.editText_note_top);
-                convertView.setTag(holder);
-            } else
-                holder = (ViewHolder) convertView.getTag();
-
-            // time
-            holder.txtTime.setText( Integer.toString(rowItemMovTsl.getTime()) );
-
-            //bot player stuff
-            if (rowItemMovTsl.getBotPlayerMov() == null ) {
-                holder.imageViewBot.setImageDrawable( getResources().getDrawable( R.mipmap.ic_mov_cont ) );
-                holder.textBot.setHint("...");
-            } else {
-                holder.textBot.setHint(rowItemMovTsl.getBotPlayerMov().getMovName());
-                holder.textBot.setHint( rowItemMovTsl.getBotPlayerMov().getMovName());
-                holder.imageViewBot.setImageResource(rowItemMovTsl.getBotPlayerMov().getMovIconID());
-            }
-            holder.textBot.addTextChangedListener(new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                    rowItemMovTsl.getBotPlayerMov().setMovNote(s.toString());
-                }
-            });
-
-            //top player stuff
-            if (rowItemMovTsl.getTopPlayerMov() == null ){
-                holder.imageViewTop.setImageDrawable( getResources().getDrawable( R.mipmap.ic_mov_cont ) );
-                holder.textTop.setHint( "..." );
-            } else {
-                holder.imageViewTop.setImageResource(rowItemMovTsl.getTopPlayerMov().getMovIconID());
-                holder.textTop.setHint(rowItemMovTsl.getTopPlayerMov().getMovName());
-                holder.textTop.setText(rowItemMovTsl.getTopPlayerMov().getMovNote());
-            }
-            holder.textTop.addTextChangedListener( new TextWatcher() {
-                @Override
-                public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-                }
-
-                @Override
-                public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-                }
-
-                @Override
-                public void afterTextChanged(Editable s) {
-                    rowItemMovTsl.getTopPlayerMov().setMovNote( s.toString() );
-                }
-            });
-
-            return convertView;
-        }
+    /**
+     * Getters and Setters
+     * */
+    public void setCurrentSequence(Sequence currentSequence) {
+        this.currentSequence = currentSequence;
     }
 }

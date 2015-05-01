@@ -498,7 +498,7 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
 
 
     @Override
-    public void onSeqEdFragmentInteraction(int dfh) {
+    public void onSeqEdFragmentInteraction(Uri uri) {
 
     }
 
@@ -506,7 +506,6 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
     public void onMovLibFragmentInteraction(String id) {
         Toast toast = Toast.makeText( getApplicationContext(), "Thanks for clicking the move ...", Toast.LENGTH_SHORT);
         toast.show();
-
     }
 
     @Override
@@ -552,6 +551,8 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
     public static void setCurrentSequence(Sequence currentSequence) {
         CajuMainActivity.currentSequence = currentSequence;
     }
+
+
 
     /**
      * A placeholder fragment containing a simple view.
