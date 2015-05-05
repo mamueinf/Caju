@@ -173,12 +173,17 @@ public class SequenceEditorFragment extends Fragment {
             while (it.hasNext()) {
 
                 TimeSlot tsl = (TimeSlot) it.next();
-                SequenceElement seqElFr = new SequenceElement();
-                seqElFr.setTsl( tsl );
 
-                getFragmentManager().beginTransaction()
-                        .add(R.id.layout_seq, seqElFr)
-                        .commit();
+                SequenceElement seqElFr;
+
+                String tag = "seqel_time"+Integer.toString(tsl.getTime());
+                if (savedInstanceState != null) {
+                    seqElFr = (SequenceElement) getFragmentManager().findFragmentByTag( tag);
+                } else {
+                    seqElFr = new SequenceElement();
+                    seqElFr.setTsl( tsl );
+                    getFragmentManager().beginTransaction().add(R.id.layout_seq, seqElFr, tag).commit();
+                }
             }
         }
 

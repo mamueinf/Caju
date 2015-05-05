@@ -366,6 +366,11 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
         qd4.setMovIconID(R.mipmap.ic_miscmov_qd4);
         movLib.addMiscMovementToMiscMovList(qd4);
 
+        MiscMovement cont = new MiscMovement();
+        cont.setMovName("...");
+        cont.setMovIconID(R.mipmap.ic_mov_cont);
+        movLib.addMiscMovementToMiscMovList(cont);
+
 
         /* Serialize the MovLib for next time */
         try

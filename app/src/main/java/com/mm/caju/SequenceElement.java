@@ -13,6 +13,7 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.mm.caju.caju_seqMdl.MiscMovement;
 import com.mm.caju.caju_seqMdl.TimeSlot;
 
 
@@ -90,13 +91,16 @@ public class SequenceElement extends Fragment {
         EditText topMovNoteView = (EditText) this.getView().findViewById(R.id.editText_note_top);
 
         if (tsl.getTopPlayerMov() == null ){
-            topMovIconView.setImageDrawable( getResources().getDrawable( R.mipmap.ic_mov_cont ) );
-            topMovNoteView.setHint( "..." );
-        } else {
-            topMovIconView.setImageDrawable( getResources().getDrawable( tsl.getTopPlayerMov().getMovIconID() ) );
-            topMovNoteView.setText( tsl.getTopPlayerMov().getMovNote() );
-            topMovNoteView.setHint( tsl.getTopPlayerMov().getMovName() );
+            MiscMovement cont = new MiscMovement();
+            cont.setMovName("...");
+            cont.setMovIconID(R.mipmap.ic_mov_cont);
+            tsl.setBotPlayerMov( cont );
         }
+
+        topMovIconView.setImageDrawable( getResources().getDrawable( tsl.getTopPlayerMov().getMovIconID() ) );
+        topMovNoteView.setText( tsl.getTopPlayerMov().getMovNote() );
+        topMovNoteView.setHint( tsl.getTopPlayerMov().getMovName() );
+
         topMovNoteView.addTextChangedListener( new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -113,14 +117,18 @@ public class SequenceElement extends Fragment {
         ImageView botMovIconView = (ImageView) this.getView().findViewById(R.id.imageView_player_bot);
         EditText botMovNoteView = (EditText) this.getView().findViewById(R.id.editText_note_bot);
 
+        // insert "continue mov" in case of unset mov
         if (tsl.getBotPlayerMov() == null ) {
-            botMovIconView.setImageDrawable( getResources().getDrawable( R.mipmap.ic_mov_cont ) );
-            botMovNoteView.setHint( "..." );
-        } else {
-            botMovIconView.setImageDrawable( getResources().getDrawable( tsl.getBotPlayerMov().getMovIconID() ) );
-            botMovNoteView.setText( tsl.getBotPlayerMov().getMovNote() );
-            botMovNoteView.setHint( tsl.getBotPlayerMov().getMovName() );
+            MiscMovement cont = new MiscMovement();
+            cont.setMovName("...");
+            cont.setMovIconID(R.mipmap.ic_mov_cont);
+            tsl.setBotPlayerMov( cont );
         }
+
+        botMovIconView.setImageDrawable( getResources().getDrawable( tsl.getBotPlayerMov().getMovIconID() ) );
+        botMovNoteView.setText( tsl.getBotPlayerMov().getMovNote() );
+        botMovNoteView.setHint( tsl.getBotPlayerMov().getMovName() );
+
         botMovNoteView.addTextChangedListener( new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
