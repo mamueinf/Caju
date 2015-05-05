@@ -67,6 +67,7 @@ public class SequenceElement extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
+        setRetainInstance(true);
     }
 
     @Override
@@ -99,14 +100,10 @@ public class SequenceElement extends Fragment {
         topMovNoteView.addTextChangedListener( new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
-
             @Override
             public void afterTextChanged(Editable s) {
                 getTsl().getTopPlayerMov().setMovNote( s.toString() );
@@ -127,14 +124,10 @@ public class SequenceElement extends Fragment {
         botMovNoteView.addTextChangedListener( new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
             }
-
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
             }
-
             @Override
             public void afterTextChanged(Editable s) {
                 getTsl().getBotPlayerMov().setMovNote( s.toString() );
