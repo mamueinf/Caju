@@ -2,16 +2,22 @@ package com.mm.caju;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.ClipData;
+import android.content.Context;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 
 import com.mm.caju.caju_seqMdl.DefMovement;
 import com.mm.caju.caju_seqMdl.MiscMovement;
+import com.mm.caju.caju_seqMdl.Movement;
 import com.mm.caju.caju_seqMdl.MovementLib;
 import com.mm.caju.caju_seqMdl.OffMovement;
 import com.mm.caju.caju_seqMdl.Sequence;
@@ -92,7 +98,7 @@ public class SequenceEditorFragment extends Fragment {
         Iterator it = null;
 
         /**
-         * fill OffMOvLib with elements
+         * fill OffMovPalette with elements
          * */
         LinearLayout offMovLibLayout = (LinearLayout) rootView.findViewById(R.id.layout_OffMovLib);
 
@@ -101,8 +107,9 @@ public class SequenceEditorFragment extends Fragment {
         while (it.hasNext()) {
 
             OffMovement offMov = (OffMovement) it.next();
+            CajuPaletteIconView imgView = new CajuPaletteIconView(getActivity());
 
-            ImageView imgView = new ImageView(getActivity());
+            imgView.setMovement( offMov );
 
             if ( offMov.getMovIconID() != 0) imgView.setImageDrawable(getResources().getDrawable(offMov.getMovIconID()));
             else imgView.setImageDrawable(getResources().getDrawable(R.mipmap.ic_caju_new));
@@ -112,10 +119,14 @@ public class SequenceEditorFragment extends Fragment {
                     LinearLayout.LayoutParams.MATCH_PARENT));
 
             offMovLibLayout.addView(imgView);
+
+            // Sets a long click listener for the ImageView using a listener object that
+            // implements the OnLongClickListener interface
+            imgView.setOnLongClickListener( new PaletteItemOnLongClickListener() );
         }
 
         /**
-         * fill DefMOvLib with elements
+         * fill DefMovPalette with elements
          * */
         LinearLayout defMovLibLayout = (LinearLayout) rootView.findViewById(R.id.layout_DefMovLib);
 
@@ -124,8 +135,9 @@ public class SequenceEditorFragment extends Fragment {
         while (it.hasNext()) {
 
             DefMovement defMov = (DefMovement) it.next();
+            CajuPaletteIconView imgView = new CajuPaletteIconView(getActivity());
 
-            ImageView imgView = new ImageView(getActivity());
+            imgView.setMovement( defMov );
 
             if ( defMov.getMovIconID() != 0) imgView.setImageDrawable(getResources().getDrawable(defMov.getMovIconID()));
             else imgView.setImageDrawable(getResources().getDrawable(R.mipmap.ic_caju_new));
@@ -135,10 +147,14 @@ public class SequenceEditorFragment extends Fragment {
                     LinearLayout.LayoutParams.MATCH_PARENT));
 
             defMovLibLayout.addView(imgView);
+
+            // Sets a long click listener for the ImageView using a listener object that
+            // implements the OnLongClickListener interface
+            imgView.setOnLongClickListener(new PaletteItemOnLongClickListener());
         }
 
         /**
-         * fill MiscMOvLib with elements
+         * fill MiscMovPalette with elements
          * */
         LinearLayout miscMovLibLayout = (LinearLayout) rootView.findViewById(R.id.layout_MiscMovLib);
 
@@ -147,8 +163,9 @@ public class SequenceEditorFragment extends Fragment {
         while (it.hasNext()) {
 
             MiscMovement miscMov = (MiscMovement) it.next();
+            CajuPaletteIconView imgView = new CajuPaletteIconView(getActivity());
 
-            ImageView imgView = new ImageView(getActivity());
+            imgView.setMovement( miscMov );
 
             if ( miscMov.getMovIconID() != 0) imgView.setImageDrawable(getResources().getDrawable(miscMov.getMovIconID()));
             else imgView.setImageDrawable(getResources().getDrawable(R.mipmap.ic_caju_new));
@@ -158,7 +175,17 @@ public class SequenceEditorFragment extends Fragment {
                     LinearLayout.LayoutParams.MATCH_PARENT));
 
             miscMovLibLayout.addView(imgView);
+
+            // Sets a long click listener for the ImageView using a listener object that
+            // implements the OnLongClickListener interface
+            imgView.setOnLongClickListener(new PaletteItemOnLongClickListener());
         }
+
+        /**
+         * prepare Add-Moves-Element as drag&Drop-Target
+         * */
+        rootView.findViewById(R.id.imageView_addBotMov).setOnDragListener(new AddMovDragListener());
+        rootView.findViewById(R.id.imageView_addTopMov).setOnDragListener(new AddMovDragListener());
 
         /**
          * fill SeqEd with elements
@@ -173,16 +200,15 @@ public class SequenceEditorFragment extends Fragment {
             while (it.hasNext()) {
 
                 TimeSlot tsl = (TimeSlot) it.next();
-
-                SequenceElement seqElFr;
-
+                SequenceElementFragment seqElFr;
                 String tag = "seqel_time"+Integer.toString(tsl.getTime());
+
                 if (savedInstanceState != null) {
-                    seqElFr = (SequenceElement) getFragmentManager().findFragmentByTag( tag);
+                    seqElFr = (SequenceElementFragment) getFragmentManager().findFragmentByTag( tag);
                 } else {
-                    seqElFr = new SequenceElement();
+                    seqElFr = new SequenceElementFragment();
                     seqElFr.setTsl( tsl );
-                    getFragmentManager().beginTransaction().add(R.id.layout_seq, seqElFr, tag).commit();
+                    this.getFragmentManager().beginTransaction().add(R.id.layout_seq, seqElFr, tag).commit();
                 }
             }
         }
@@ -205,10 +231,16 @@ public class SequenceEditorFragment extends Fragment {
         String formattedDate = df.format(Calendar.getInstance().getTime());
 
         if ( currentSequence != null) {
-            currentSequence.setDate(formattedDate);
-            if ( !getCajuSequenceLib().getSequenceList().contains( currentSequence ) )
-                getCajuSequenceLib().addSequenceToSequenceList( currentSequence );
+            if (!currentSequence.getTimeslots().isEmpty()) {
+                currentSequence.setDate(formattedDate);
+                if (!getCajuSequenceLib().getSequenceList().contains(currentSequence))
+                    getCajuSequenceLib().addSequenceToSequenceList(currentSequence);
+
+                Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Sequence saved ...", Toast.LENGTH_SHORT);
+                toast.show();
+            }
         }
+
         ((CajuMainActivity)getActivity()).saveSeqLib();
     }
 
@@ -247,9 +279,114 @@ public class SequenceEditorFragment extends Fragment {
 
 
     /**
+     * This
+     *
+     */
+    protected class CajuPaletteIconView extends ImageView {
+
+        private Movement movement;
+
+        public CajuPaletteIconView(Context context) {
+            super(context);
+        }
+
+        public Movement getMovement() {
+            return movement;
+        }
+
+        public void setMovement(Movement movement) {
+            this.movement = movement;
+        }
+    }
+
+    /**
+     * This
+     *
+     */
+    private class PaletteItemOnLongClickListener implements View.OnLongClickListener {
+        // Defines the one method for the interface, which is called when the View is long-clicked
+        public boolean onLongClick(View v) {
+
+            ClipData dragData = ClipData.newPlainText("", ""); // do not carry any text data
+            View.DragShadowBuilder myShadow = new View.DragShadowBuilder(v);
+
+            // Starts the drag
+            v.startDrag(dragData,  // the data to be dragged
+                    myShadow,  // the drag shadow builder
+                    ((CajuPaletteIconView)v).getMovement(),      // local data
+                    0          // flags (not currently used, set to 0)
+            );
+
+            return true;
+        }
+    }
+
+    /**
+     * This
+     *
+     */
+    private class AddMovDragListener implements View.OnDragListener {
+        @Override
+        public boolean onDrag(View v, DragEvent event) {
+            int action = event.getAction();
+            switch (event.getAction()) {
+                case DragEvent.ACTION_DRAG_STARTED:
+                    // do nothing
+                    break;
+                case DragEvent.ACTION_DRAG_ENTERED:
+                    // indicate valid drop zone
+                    v.setBackgroundColor( Color.DKGRAY );
+                    break;
+                case DragEvent.ACTION_DRAG_EXITED:
+                    v.setBackgroundColor(Color.TRANSPARENT);
+                    break;
+                case DragEvent.ACTION_DROP:
+                    // Dropped,
+                    // add timeslot to sequence
+                    TimeSlot tsl = new TimeSlot();
+                    currentSequence.addTimeSlotToTimeslots(tsl);
+                    tsl.setTime(currentSequence.getTimeslots().indexOf(tsl));
+
+                    // insert passed movement object into timeslot at correct position
+                    if (v.equals( getActivity().findViewById(R.id.imageView_addBotMov)) ){
+                        Movement mov = (Movement) event.getLocalState();
+                        try {
+                            tsl.setBotPlayerMov( (Movement) mov.clone() );
+                        } catch (CloneNotSupportedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if (v.equals( getActivity().findViewById(R.id.imageView_addTopMov)) ){
+                        Movement mov = (Movement) event.getLocalState();
+                        try {
+                            tsl.setTopPlayerMov((Movement) mov.clone());
+                        } catch (CloneNotSupportedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    // create sequence element fragment and add do layout to display
+                    SequenceElementFragment seqElFr = new SequenceElementFragment();
+                    seqElFr.setTsl(tsl);
+                    String tag = "seqel_time"+Integer.toString(tsl.getTime());
+                    getActivity().getFragmentManager().beginTransaction().add(R.id.layout_seq, seqElFr, tag).commit();
+                    break;
+                case DragEvent.ACTION_DRAG_ENDED:
+                    v.setBackgroundColor(Color.TRANSPARENT);
+                default:
+                    break;
+            }
+            return true;
+        }
+    }
+
+
+    /**
      * Getters and Setters
      * */
     public void setCurrentSequence(Sequence currentSequence) {
         this.currentSequence = currentSequence;
     }
+
+
 }

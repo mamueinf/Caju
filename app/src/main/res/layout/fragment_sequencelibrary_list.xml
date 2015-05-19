@@ -3,10 +3,27 @@
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent" tools:context="com.mm.caju.SequenceLibraryFragment">
 
-    <ListView android:id="@android:id/list" android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
 
-    <TextView android:id="@android:id/empty" android:layout_width="match_parent"
-        android:layout_height="match_parent" android:gravity="center" />
+        <ListView android:id="@android:id/list" android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_alignParentTop="true"
+            android:layout_above="@+id/imageView3" />
+
+        <TextView android:id="@android:id/empty" android:layout_width="match_parent"
+            android:layout_height="match_parent" android:gravity="center" />
+
+        <ImageView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/imageView3"
+            android:src="@mipmap/ic_mov_del"
+            android:layout_alignParentBottom="true"
+            android:layout_centerHorizontal="true"
+            android:contentDescription="@string/dots"
+            android:padding="@dimen/abc_action_bar_default_padding_material" />
+    </RelativeLayout>
 
 </FrameLayout>

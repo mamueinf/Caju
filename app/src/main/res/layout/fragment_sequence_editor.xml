@@ -20,11 +20,69 @@
         android:layout_alignParentTop="true"
         android:layout_above="@+id/imageView" >
 
-        <LinearLayout
-            android:orientation="vertical"
+        <RelativeLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:id="@+id/layout_seq"></LinearLayout>
+            android:layout_height="wrap_content">
+
+            <LinearLayout
+                android:orientation="vertical"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:id="@+id/layout_seq"
+                android:layout_alignParentTop="true">
+
+            </LinearLayout>
+
+            <FrameLayout
+                tools:context="com.mm.caju.SequenceElementFragment"
+                xmlns:android="http://schemas.android.com/apk/res/android"
+                xmlns:tools="http://schemas.android.com/tools"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_below="@+id/layout_seq">
+
+                <RelativeLayout
+                    tools:context=".SequenceElementFragment"
+                    xmlns:android="http://schemas.android.com/apk/res/android"
+                    xmlns:tools="http://schemas.android.com/tools"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:id="@+id/relativeLayout2" >
+
+                    <ImageView
+                        android:id="@+id/imageView_addTopMov"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentLeft="false"
+                        android:layout_alignParentTop="false"
+                        android:src="@mipmap/ic_player_bot"
+                        android:contentDescription="@string/dots"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@+id/textView" />
+
+                    <ImageView
+                        android:id="@+id/imageView_addBotMov"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="false"
+                        android:layout_alignParentTop="false"
+                        android:src="@mipmap/ic_player_bot"
+                        android:contentDescription="@string/dots"
+                        android:layout_centerVertical="true"
+                        android:layout_toLeftOf="@+id/textView" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textAppearance="?android:attr/textAppearanceSmall"
+                        android:text="@string/dots"
+                        android:layout_centerInParent="true"
+                        android:id="@+id/textView"
+                        android:padding="@dimen/abc_button_padding_vertical_material" />
+
+                </RelativeLayout>
+            </FrameLayout>
+        </RelativeLayout>
     </ScrollView>
 
     <HorizontalScrollView

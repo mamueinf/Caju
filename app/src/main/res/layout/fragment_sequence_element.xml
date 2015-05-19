@@ -1,6 +1,6 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
-    android:layout_height="match_parent" tools:context="com.mm.caju.SequenceElement">
+    android:layout_height="match_parent" tools:context="com.mm.caju.SequenceElementFragment">
 
     <!-- TODO: Update blank fragment layout -->
 
@@ -26,47 +26,43 @@
             android:layout_centerVertical="true"
             android:layout_alignParentEnd="false"
             android:layout_alignParentRight="false"
-            android:layout_toRightOf="@+id/imageView_player_top"
             android:editable="true"
             android:inputType="text"
             android:enabled="true"
-            android:hint="..."
+            android:hint="@string/dots"
             android:textStyle="italic"
             android:visibility="visible"
             android:selectAllOnFocus="true"
             style="@style/TextAppearance.AppCompat.Widget.PopupMenu.Small"
-            android:gravity="left|start" />
+            android:gravity="left|start"
+            android:layout_toRightOf="@+id/imageView_player_top" />
 
-        <ImageView
+        <view
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            class="com.mm.caju.CajuMovIconView"
             android:id="@+id/imageView_player_top"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentLeft="false"
-            android:layout_alignParentTop="false"
-            android:src="@mipmap/ic_player_bot"
-            android:contentDescription="..."
+            android:layout_toRightOf="@+id/textView_time"
             android:layout_centerVertical="true"
-            android:layout_toRightOf="@+id/textView_time" />
-
-        <ImageView
-            android:id="@+id/imageView_player_bot"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentBottom="false"
-            android:layout_alignParentTop="false"
-            android:src="@mipmap/ic_player_bot"
-            android:contentDescription=""
-            android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/textView_time" />
+            android:src="@mipmap/ic_mov_cont" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="."
+            android:text="@string/dots"
             android:layout_centerInParent="true"
             android:id="@+id/textView_time"
             android:padding="@dimen/abc_button_padding_vertical_material" />
+
+        <view
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            class="com.mm.caju.CajuMovIconView"
+            android:id="@+id/imageView_player_bot"
+            android:src="@mipmap/ic_mov_cont"
+            android:layout_toLeftOf="@+id/textView_time"
+            android:layout_centerVertical="true" />
 
         <EditText
             android:layout_width="wrap_content"
@@ -80,11 +76,10 @@
             android:alpha="0.5"
             android:textIsSelectable="false"
             android:layout_centerVertical="true"
-            android:layout_toLeftOf="@+id/imageView_player_bot"
             android:layout_alignParentStart="false"
             android:layout_alignParentLeft="false"
             android:editable="true"
-            android:hint="..."
+            android:hint="@string/dots"
             android:inputType="text"
             android:enabled="true"
             android:textStyle="italic"
@@ -92,7 +87,9 @@
             android:selectAllOnFocus="true"
             style="@style/Base.TextAppearance.AppCompat.Widget.PopupMenu.Small"
             android:nestedScrollingEnabled="false"
-            android:gravity="end|right" />
+            android:gravity="end|right"
+            android:layout_toLeftOf="@+id/imageView_player_bot" />
+
     </RelativeLayout>
 
 </FrameLayout>

@@ -122,6 +122,7 @@ public class SequenceLibraryFragment extends Fragment implements AbsListView.OnI
         }
     }
 
+
     /**
      * The default content for this Fragment has a TextView that is shown when
      * the list is empty. If you would like to change the text, call this method
@@ -150,8 +151,11 @@ public class SequenceLibraryFragment extends Fragment implements AbsListView.OnI
         public void onSeqLibFragmentInteraction(Sequence selSeq);
     }
 
-    public class SeqLibListViewAdapter extends ArrayAdapter<Sequence> {
 
+    /**
+     *
+     */
+    public class SeqLibListViewAdapter extends ArrayAdapter<Sequence> {
 
         Context context;
 

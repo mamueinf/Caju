@@ -31,7 +31,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 
 
-public class CajuMainActivity extends ActionBarActivity implements SequenceLibraryFragment.OnFragmentInteractionListener, SequenceElement.OnFragmentInteractionListener, MovementLibraryFragment2.OnFragmentInteractionListener, SequenceEditorFragment.OnFragmentInteractionListener {
+public class CajuMainActivity extends ActionBarActivity implements SequenceLibraryFragment.OnFragmentInteractionListener, SequenceElementFragment.OnFragmentInteractionListener, MovementLibraryFragment2.OnFragmentInteractionListener, SequenceEditorFragment.OnFragmentInteractionListener {
 
 
     private static MovementLib cajuMovementLib = null;
@@ -48,11 +48,11 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        if (savedInstanceState == null) {
-//            getFragmentManager().beginTransaction()
-//                    .add(R.id.container, new PlaceholderFragment())
-//                    .commit();
-//        }
+        if (savedInstanceState == null) {
+            getFragmentManager().beginTransaction()
+                    .add(R.id.container, new WelcomScreenFragment())
+                    .commit();
+        }
 
         loadMovLib();
         loadSeqLib();
@@ -93,28 +93,45 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
 
     private void showSeqEd() {
 
-        Toast toast = Toast.makeText( getApplicationContext(), "Switching to Sequence Editor ...", Toast.LENGTH_SHORT);
-        toast.show();
-
-        FragmentTransaction transaction = getFragmentManager().beginTransaction();
-        if (mSeqEdFragment == null) {
+        // create editor fragment, if necessary
+        if (mSeqEdFragment == null)
             mSeqEdFragment = new SequenceEditorFragment();
-            if ( currentSequence == null ) {
-                currentSequence = new Sequence();
-                currentSequence.setSeqTitle("New Sequence");
-                currentSequence.setTimeslots(new ArrayList<TimeSlot>());
+        else {
+            // if not, and ...
+            // if already in editor, reselecting the editor should open it with a new blank sequence
+            if (mSeqEdFragment.isVisible()) {
+                // therefore, remove the sequence, remove the fragment
+                FragmentTransaction transaction = getFragmentManager().beginTransaction();
+                transaction.remove( mSeqEdFragment );
+                transaction.commit();
+                currentSequence = null;
+                Toast toast = Toast.makeText(getApplicationContext(), "New Sequence ...", Toast.LENGTH_SHORT);
+                toast.show();
             }
-            mSeqEdFragment.setCurrentSequence( currentSequence );
         }
 
-        if (!getFragmentManager().popBackStackImmediate("show_seqed", 0)){
-            transaction.replace(R.id.container, mSeqEdFragment);
+        // create editable sequence, if necessary
+        if ( currentSequence == null ) {
+            currentSequence = new Sequence();
+            currentSequence.setSeqTitle("New Sequence");
+            currentSequence.setTimeslots(new ArrayList<TimeSlot>());
+        }
+
+        // associate sequence with editor
+        mSeqEdFragment.setCurrentSequence(currentSequence);
+
+        // open editor fragment or restore editor fragment from backstack
+        FragmentTransaction transaction = getFragmentManager().beginTransaction();
+
+        if (!getFragmentManager().popBackStackImmediate("show_seqed", 0)) {
+            transaction.replace(R.id.container, mSeqEdFragment, "SEQED");
             transaction.addToBackStack("show_seqed");
             transaction.commit();
-        } else{
+        } else {
             getFragmentManager().popBackStackImmediate("show_seqed", 0);
         }
     }
+
 
     private void showSeqLib() {
         Toast toast = Toast.makeText( getApplicationContext(), "Switching to Sequence Library ...", Toast.LENGTH_SHORT);
@@ -153,7 +170,7 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
 
     private void showSettings() {
 
-        Toast toast = Toast.makeText( getApplicationContext(), "No options yet ...", Toast.LENGTH_SHORT );
+        Toast toast = Toast.makeText(getApplicationContext(), "No options yet ...", Toast.LENGTH_SHORT);
         toast.show();
     }
 
@@ -172,7 +189,6 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
             if (!xmlFile.exists()) {
                 cajuSequenceLib = new SequenceLib();
                 cajuSequenceLib.setSequenceList( new ArrayList<Sequence>() );
-                cajuSequenceLib.addSequenceToSequenceList(createExampleSequence());
                 cajuSequenceLib.addSequenceToSequenceList(createExampleSequence());
                 saveSeqLib();
 
@@ -264,6 +280,11 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
         neg.setMovIconID(R.mipmap.ic_defmov_neg);
         movLib.addDefMovementToDefMovList(neg);
 
+        DefMovement ngc = new DefMovement();
+        ngc.setMovName("Negaca");
+        ngc.setMovIconID(R.mipmap.ic_defmov_ngc);
+        movLib.addDefMovementToDefMovList(ngc);
+
         DefMovement coc = new DefMovement();
         coc.setMovName("Cocorinha");
         coc.setMovIconID(R.mipmap.ic_defmov_coco);
@@ -332,7 +353,7 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
         movLib.addMiscMovementToMiscMovList(role);
 
         MiscMovement vdj = new MiscMovement();
-        vdj.setMovName("V... de Jogo");
+        vdj.setMovName("Virar de jogo");
         vdj.setMovIconID(R.mipmap.ic_miscmov_vdj);
         movLib.addMiscMovementToMiscMovList(vdj);
 
@@ -521,7 +542,7 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
     @Override
     public void onSeqLibFragmentInteraction(Sequence selSeq) {
 
-        Toast toast = Toast.makeText( getApplicationContext(), "Sequence selected for editing ...", Toast.LENGTH_SHORT);
+        Toast toast = Toast.makeText( getApplicationContext(), "Sequence opened ...", Toast.LENGTH_SHORT);
         toast.show();
 
         currentSequence = selSeq;
@@ -557,14 +578,24 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
         CajuMainActivity.currentSequence = currentSequence;
     }
 
+    public void showSeqEd(View v){
+        showSeqEd();
+    }
 
+    public void showSeqLib(View v){
+        showSeqLib();
+    }
+
+    public void showMovLib(View v){
+        showMovLib();
+    }
 
     /**
      * A placeholder fragment containing a simple view.
      */
-    public static class PlaceholderFragment extends Fragment {
+    public static class WelcomScreenFragment extends Fragment {
 
-        public PlaceholderFragment() {
+        public WelcomScreenFragment() {
         }
 
         @Override
@@ -573,5 +604,8 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
             View rootView = inflater.inflate(R.layout.fragment_main, container, false);
             return rootView;
         }
+
+
+
     }
 }

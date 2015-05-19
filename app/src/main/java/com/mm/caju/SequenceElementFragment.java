@@ -2,30 +2,32 @@ package com.mm.caju;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
-import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.mm.caju.caju_seqMdl.MiscMovement;
+import com.mm.caju.caju_seqMdl.Movement;
 import com.mm.caju.caju_seqMdl.TimeSlot;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link SequenceElement.OnFragmentInteractionListener} interface
+ * {@link SequenceElementFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link SequenceElement#newInstance} factory method to
+ * Use the {@link SequenceElementFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SequenceElement extends Fragment {
+public class SequenceElementFragment extends Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -45,11 +47,11 @@ public class SequenceElement extends Fragment {
      *
      * @param param1 Parameter 1.
      * @param param2 Parameter 2.
-     * @return A new instance of fragment SequenceElement.
+     * @return A new instance of fragment SequenceElementFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static SequenceElement newInstance(String param1, String param2) {
-        SequenceElement fragment = new SequenceElement();
+    public static SequenceElementFragment newInstance(String param1, String param2) {
+        SequenceElementFragment fragment = new SequenceElementFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
@@ -57,7 +59,7 @@ public class SequenceElement extends Fragment {
         return fragment;
     }
 
-    public SequenceElement() {
+    public SequenceElementFragment() {
         // Required empty public constructor
     }
 
@@ -68,7 +70,7 @@ public class SequenceElement extends Fragment {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
-        setRetainInstance(true);
+//        setRetainInstance(true);
     }
 
     @Override
@@ -84,23 +86,29 @@ public class SequenceElement extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
+        // time
         TextView timeView = (TextView) this.getView().findViewById(R.id.textView_time);
         timeView.setText( Integer.toString(tsl.getTime()) );
 
-        ImageView topMovIconView = (ImageView) this.getView().findViewById(R.id.imageView_player_top);
+        ////
+        // top player mov
+        CajuMovIconView topMovIconView = (CajuMovIconView) this.getView().findViewById(R.id.imageView_player_top);
         EditText topMovNoteView = (EditText) this.getView().findViewById(R.id.editText_note_top);
 
+        // insert "continue mov" in case of unset mov
         if (tsl.getTopPlayerMov() == null ){
             MiscMovement cont = new MiscMovement();
             cont.setMovName("...");
             cont.setMovIconID(R.mipmap.ic_mov_cont);
-            tsl.setBotPlayerMov( cont );
+            tsl.setTopPlayerMov( cont );
         }
 
+        topMovIconView.setTimeslot( tsl );
         topMovIconView.setImageDrawable( getResources().getDrawable( tsl.getTopPlayerMov().getMovIconID() ) );
+        topMovIconView.setOnDragListener( new MovDragListener() );
+
         topMovNoteView.setText( tsl.getTopPlayerMov().getMovNote() );
         topMovNoteView.setHint( tsl.getTopPlayerMov().getMovName() );
-
         topMovNoteView.addTextChangedListener( new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -114,7 +122,9 @@ public class SequenceElement extends Fragment {
             }
         });
 
-        ImageView botMovIconView = (ImageView) this.getView().findViewById(R.id.imageView_player_bot);
+        ////
+        // bot player mov
+        CajuMovIconView botMovIconView = (CajuMovIconView) this.getView().findViewById(R.id.imageView_player_bot);
         EditText botMovNoteView = (EditText) this.getView().findViewById(R.id.editText_note_bot);
 
         // insert "continue mov" in case of unset mov
@@ -125,10 +135,12 @@ public class SequenceElement extends Fragment {
             tsl.setBotPlayerMov( cont );
         }
 
+        botMovIconView.setTimeslot( tsl );
         botMovIconView.setImageDrawable( getResources().getDrawable( tsl.getBotPlayerMov().getMovIconID() ) );
+        botMovIconView.setOnDragListener(new MovDragListener());
+
         botMovNoteView.setText( tsl.getBotPlayerMov().getMovNote() );
         botMovNoteView.setHint( tsl.getBotPlayerMov().getMovName() );
-
         botMovNoteView.addTextChangedListener( new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -142,6 +154,7 @@ public class SequenceElement extends Fragment {
             }
         });
     }
+
 
     // TODO: Rename method, update argument and hook method into UI event
     public void onButtonPressed(Uri uri) {
@@ -167,6 +180,9 @@ public class SequenceElement extends Fragment {
         mListener = null;
     }
 
+    /**
+    * Getters and Setters
+    */
     public TimeSlot getTsl() {
         return tsl;
     }
@@ -190,4 +206,58 @@ public class SequenceElement extends Fragment {
         public void onSeqElementFragmentInteraction(Uri uri);
     }
 
+
+
+    /**
+     * This
+     *
+     */
+    private class MovDragListener implements View.OnDragListener {
+        @Override
+        public boolean onDrag(View v, DragEvent event) {
+            final int action = event.getAction();
+            switch (action) {
+                case DragEvent.ACTION_DRAG_STARTED:
+                    // do nothing
+                    break;
+                case DragEvent.ACTION_DRAG_ENTERED:
+                    // indicate valid drop zone
+                    v.setBackgroundColor( Color.DKGRAY );
+                    break;
+                case DragEvent.ACTION_DRAG_EXITED:
+                    v.setBackgroundColor(Color.TRANSPARENT);
+                    break;
+                case DragEvent.ACTION_DROP:
+                    // Dropped,
+                    // insert passed movement object
+                    CajuMovIconView icVw = (CajuMovIconView) v;
+                    if (icVw.equals( getView().findViewById(R.id.imageView_player_bot)) ){
+                        Movement mov = (Movement) event.getLocalState();
+                        try {
+                            icVw.getTimeslot().setBotPlayerMov( (Movement) mov.clone());
+                            icVw.setBackgroundColor(Color.TRANSPARENT);
+                            icVw.setImageDrawable(getResources().getDrawable( icVw.getTimeslot().getBotPlayerMov().getMovIconID()));
+                        } catch (CloneNotSupportedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    if (icVw.equals( getView().findViewById(R.id.imageView_player_top)) ){
+                        Movement mov = (Movement) event.getLocalState();
+                        try {
+                            icVw.getTimeslot().setTopPlayerMov((Movement) mov.clone());
+                            icVw.setBackgroundColor(Color.TRANSPARENT);
+                            icVw.setImageDrawable(getResources().getDrawable(icVw.getTimeslot().getTopPlayerMov().getMovIconID()));
+                        } catch (CloneNotSupportedException e) {
+                            e.printStackTrace();
+                        }
+                    }
+                    break;
+                case DragEvent.ACTION_DRAG_ENDED:
+                    v.setBackgroundColor(Color.TRANSPARENT);
+                default:
+                    break;
+            }
+            return true;
+        }
+    }
 }
