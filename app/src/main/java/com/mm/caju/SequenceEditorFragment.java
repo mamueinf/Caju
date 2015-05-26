@@ -7,6 +7,7 @@ import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,6 +29,7 @@ import java.util.Calendar;
 import java.util.Iterator;
 
 import static com.mm.caju.CajuMainActivity.getCajuSequenceLib;
+import static com.mm.caju.CajuMainActivity.getCurrentSequence;
 
 
 /**
@@ -94,6 +96,15 @@ public class SequenceEditorFragment extends Fragment {
         // Inflate the layout for this fragment
         View rootView = inflater.inflate(R.layout.fragment_sequence_editor, container, false);
 
+
+        /** prepare trash bin as drag&drop-Target  **/
+        rootView.findViewById(R.id.imageView_seqed_trashbin).setOnDragListener(new DelMovDragListener());
+
+        /** prepare Add-Moves-Element as drag&drop-Target */
+        rootView.findViewById(R.id.imageView_addBotMov).setOnDragListener(new AddMovDragListener());
+        rootView.findViewById(R.id.imageView_addTopMov).setOnDragListener(new AddMovDragListener());
+
+
         /** def iterator **/
         Iterator it = null;
 
@@ -102,7 +113,7 @@ public class SequenceEditorFragment extends Fragment {
          * */
         LinearLayout offMovLibLayout = (LinearLayout) rootView.findViewById(R.id.layout_OffMovLib);
 
-        /** use iterator **/
+        // use iterator
         it = cajuMovementLib.getOffMovList().iterator();
         while (it.hasNext()) {
 
@@ -130,7 +141,7 @@ public class SequenceEditorFragment extends Fragment {
          * */
         LinearLayout defMovLibLayout = (LinearLayout) rootView.findViewById(R.id.layout_DefMovLib);
 
-        /** REUSE iterator **/
+        // REUSE iterator
         it = cajuMovementLib.getDefMovList().iterator();
         while (it.hasNext()) {
 
@@ -158,7 +169,7 @@ public class SequenceEditorFragment extends Fragment {
          * */
         LinearLayout miscMovLibLayout = (LinearLayout) rootView.findViewById(R.id.layout_MiscMovLib);
 
-        /** REUSE iterator **/
+        // REUSE iterator
         it = cajuMovementLib.getMiscMovList().iterator();
         while (it.hasNext()) {
 
@@ -181,21 +192,17 @@ public class SequenceEditorFragment extends Fragment {
             imgView.setOnLongClickListener(new PaletteItemOnLongClickListener());
         }
 
-        /**
-         * prepare Add-Moves-Element as drag&Drop-Target
-         * */
-        rootView.findViewById(R.id.imageView_addBotMov).setOnDragListener(new AddMovDragListener());
-        rootView.findViewById(R.id.imageView_addTopMov).setOnDragListener(new AddMovDragListener());
+
 
         /**
-         * fill SeqEd with elements
+         * fill SeqEd with elements of currently edited sequence
          * */
         LinearLayout seqLayout = (LinearLayout) rootView.findViewById(R.id.layout_seq);
 
         currentSequence = CajuMainActivity.getCurrentSequence();
 
         if ( currentSequence != null ) {
-            /** REUSE iterator **/
+            // REUSE iterator
             it = currentSequence.getTimeslots().iterator();
             while (it.hasNext()) {
 
@@ -282,7 +289,7 @@ public class SequenceEditorFragment extends Fragment {
      * This
      *
      */
-    protected class CajuPaletteIconView extends ImageView {
+    public class CajuPaletteIconView extends ImageView {
 
         private Movement movement;
 
@@ -307,7 +314,7 @@ public class SequenceEditorFragment extends Fragment {
         // Defines the one method for the interface, which is called when the View is long-clicked
         public boolean onLongClick(View v) {
 
-            ClipData dragData = ClipData.newPlainText("", ""); // do not carry any text data
+            ClipData dragData = ClipData.newPlainText("from_palMov", ""); // do not carry any text data
             View.DragShadowBuilder myShadow = new View.DragShadowBuilder(v);
 
             // Starts the drag
@@ -316,6 +323,10 @@ public class SequenceEditorFragment extends Fragment {
                     ((CajuPaletteIconView)v).getMovement(),      // local data
                     0          // flags (not currently used, set to 0)
             );
+
+            // Vibrate for X milliseconds
+            Vibrator vib = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+            vib.vibrate(20);
 
             return true;
         }
@@ -329,47 +340,59 @@ public class SequenceEditorFragment extends Fragment {
         @Override
         public boolean onDrag(View v, DragEvent event) {
             int action = event.getAction();
-            switch (event.getAction()) {
+            String descr;
+            switch (action) {
                 case DragEvent.ACTION_DRAG_STARTED:
                     // do nothing
                     break;
                 case DragEvent.ACTION_DRAG_ENTERED:
                     // indicate valid drop zone
-                    v.setBackgroundColor( Color.DKGRAY );
+                    descr = event.getClipDescription().getLabel().toString();
+                    if ( descr.equals("from_palMov") )
+                        v.setBackgroundColor( Color.DKGRAY );
                     break;
                 case DragEvent.ACTION_DRAG_EXITED:
-                    v.setBackgroundColor(Color.TRANSPARENT);
+                    descr = event.getClipDescription().getLabel().toString();
+                    if ( descr.equals("from_palMov") )
+                        v.setBackgroundColor(Color.TRANSPARENT);
                     break;
                 case DragEvent.ACTION_DROP:
                     // Dropped,
                     // add timeslot to sequence
-                    TimeSlot tsl = new TimeSlot();
-                    currentSequence.addTimeSlotToTimeslots(tsl);
-                    tsl.setTime(currentSequence.getTimeslots().indexOf(tsl));
+                    descr = event.getClipDescription().getLabel().toString();
+                    if ( descr.equals("from_palMov") ) {
+                        TimeSlot tsl = new TimeSlot();
+                        currentSequence.addTimeSlotToTimeslots(tsl);
+                        tsl.setTime(currentSequence.getTimeslots().indexOf(tsl));
 
-                    // insert passed movement object into timeslot at correct position
-                    if (v.equals( getActivity().findViewById(R.id.imageView_addBotMov)) ){
-                        Movement mov = (Movement) event.getLocalState();
-                        try {
-                            tsl.setBotPlayerMov( (Movement) mov.clone() );
-                        } catch (CloneNotSupportedException e) {
-                            e.printStackTrace();
+                        // insert passed movement object into timeslot at correct position
+                        if (v.equals(getActivity().findViewById(R.id.imageView_addBotMov))) {
+                            Movement mov = (Movement) event.getLocalState();
+                            try {
+                                tsl.setBotPlayerMov((Movement) mov.clone());
+                            } catch (CloneNotSupportedException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    }
-                    if (v.equals( getActivity().findViewById(R.id.imageView_addTopMov)) ){
-                        Movement mov = (Movement) event.getLocalState();
-                        try {
-                            tsl.setTopPlayerMov((Movement) mov.clone());
-                        } catch (CloneNotSupportedException e) {
-                            e.printStackTrace();
+                        if (v.equals(getActivity().findViewById(R.id.imageView_addTopMov))) {
+                            Movement mov = (Movement) event.getLocalState();
+                            try {
+                                tsl.setTopPlayerMov((Movement) mov.clone());
+                            } catch (CloneNotSupportedException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    }
 
-                    // create sequence element fragment and add do layout to display
-                    SequenceElementFragment seqElFr = new SequenceElementFragment();
-                    seqElFr.setTsl(tsl);
-                    String tag = "seqel_time"+Integer.toString(tsl.getTime());
-                    getActivity().getFragmentManager().beginTransaction().add(R.id.layout_seq, seqElFr, tag).commit();
+                        // create sequence element fragment and add do layout to display
+                        SequenceElementFragment seqElFr = new SequenceElementFragment();
+                        seqElFr.setTsl(tsl);
+                        String tag = "seqel_time" + Integer.toString(tsl.getTime());
+                        getActivity().getFragmentManager().beginTransaction().add(R.id.layout_seq, seqElFr, tag).commit();
+
+                        // Vibrate for X milliseconds
+                        Vibrator vib = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+                        vib.vibrate(20);
+                    }
                     break;
                 case DragEvent.ACTION_DRAG_ENDED:
                     v.setBackgroundColor(Color.TRANSPARENT);
@@ -380,6 +403,53 @@ public class SequenceEditorFragment extends Fragment {
         }
     }
 
+    /**
+     * This
+     *
+     */
+    private class DelMovDragListener implements View.OnDragListener {
+        @Override
+        public boolean onDrag(View v, DragEvent event) {
+            int action = event.getAction();
+            String descr;
+            /** react only on moves deleted from the sequence */
+                switch (action) {
+                    case DragEvent.ACTION_DRAG_STARTED:
+                        // indicate as valid drop zone
+                        break;
+                    case DragEvent.ACTION_DRAG_ENTERED:
+                        // indicate valid drop zone
+                        descr = event.getClipDescription().getLabel().toString();
+                        if ( descr.equals("from_seqMov") )
+                            v.setBackgroundColor(Color.RED);
+                        break;
+                    case DragEvent.ACTION_DRAG_EXITED:
+                        descr = event.getClipDescription().getLabel().toString();
+                        if ( descr.equals("from_seqMov") )
+                            v.setBackgroundColor(Color.TRANSPARENT);
+                        break;
+                    case DragEvent.ACTION_DROP:
+                        // Dropped,
+                        descr = event.getClipDescription().getLabel().toString();
+                        if ( descr.equals("from_seqMov") ) {
+                            TimeSlot tsl = (TimeSlot) event.getLocalState();
+                            // delete timeslot and sequence element fragment from layout
+                            String tag = "seqel_time" + Integer.toString(tsl.getTime());
+                            getActivity().getFragmentManager().beginTransaction().remove(getActivity().getFragmentManager().findFragmentByTag(tag)).commit();
+                            getCurrentSequence().removeTimeSlotToTimeslots(tsl);
+                        }
+                        // Vibrate for X milliseconds
+                        Vibrator vib = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+                        vib.vibrate(20);
+                        break;
+                    case DragEvent.ACTION_DRAG_ENDED:
+                        v.setBackgroundColor(Color.TRANSPARENT);
+                    default:
+                        break;
+                }
+            return true;
+        }
+    }
 
     /**
      * Getters and Setters

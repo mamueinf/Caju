@@ -2,9 +2,12 @@ package com.mm.caju;
 
 import android.app.Activity;
 import android.app.Fragment;
+import android.content.ClipData;
+import android.content.Context;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.DragEvent;
@@ -86,12 +89,14 @@ public class SequenceElementFragment extends Fragment {
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        // time
+        /**
+         * prepare all viewable elements of a timeslot representation
+         */
+        /** time */
         TextView timeView = (TextView) this.getView().findViewById(R.id.textView_time);
-        timeView.setText( Integer.toString(tsl.getTime()) );
+        timeView.setText(Integer.toString(tsl.getTime()));
 
-        ////
-        // top player mov
+        /** top player mov */
         CajuMovIconView topMovIconView = (CajuMovIconView) this.getView().findViewById(R.id.imageView_player_top);
         EditText topMovNoteView = (EditText) this.getView().findViewById(R.id.editText_note_top);
 
@@ -103,9 +108,11 @@ public class SequenceElementFragment extends Fragment {
             tsl.setTopPlayerMov( cont );
         }
 
-        topMovIconView.setTimeslot( tsl );
-        topMovIconView.setImageDrawable( getResources().getDrawable( tsl.getTopPlayerMov().getMovIconID() ) );
-        topMovIconView.setOnDragListener( new MovDragListener() );
+        // icon
+        topMovIconView.setTimeslot(tsl);
+        topMovIconView.setImageDrawable(getResources().getDrawable(tsl.getTopPlayerMov().getMovIconID()));
+        topMovIconView.setOnDragListener(new MovReplaceListener());
+        topMovIconView.setOnLongClickListener(new SeqMoveOnLongClickListener());
 
         topMovNoteView.setText( tsl.getTopPlayerMov().getMovNote() );
         topMovNoteView.setHint( tsl.getTopPlayerMov().getMovName() );
@@ -135,9 +142,10 @@ public class SequenceElementFragment extends Fragment {
             tsl.setBotPlayerMov( cont );
         }
 
-        botMovIconView.setTimeslot( tsl );
-        botMovIconView.setImageDrawable( getResources().getDrawable( tsl.getBotPlayerMov().getMovIconID() ) );
-        botMovIconView.setOnDragListener(new MovDragListener());
+        botMovIconView.setTimeslot(tsl);
+        botMovIconView.setImageDrawable(getResources().getDrawable(tsl.getBotPlayerMov().getMovIconID()));
+        botMovIconView.setOnDragListener(new MovReplaceListener());
+        botMovIconView.setOnLongClickListener(new SeqMoveOnLongClickListener());
 
         botMovNoteView.setText( tsl.getBotPlayerMov().getMovNote() );
         botMovNoteView.setHint( tsl.getBotPlayerMov().getMovName() );
@@ -206,50 +214,85 @@ public class SequenceElementFragment extends Fragment {
         public void onSeqElementFragmentInteraction(Uri uri);
     }
 
+    /**
+     * This
+     *
+     */
+    private class SeqMoveOnLongClickListener implements View.OnLongClickListener {
+        // Defines the one method for the interface, which is called when the View is long-clicked
+        public boolean onLongClick(View v) {
 
+            ClipData dragData = ClipData.newPlainText("from_seqMov", ""); // do not carry any text data
+            View.DragShadowBuilder myShadow = new View.DragShadowBuilder(v);
+
+            // Starts the drag
+            v.startDrag(dragData,  // the data to be dragged
+                    myShadow,  // the drag shadow builder
+                    ((CajuMovIconView)v).getTimeslot(),      // local data
+                    0          // flags (not currently used, set to 0)
+            );
+
+            // Vibrate for X milliseconds
+            Vibrator vib = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+            vib.vibrate(20);
+
+            return true;
+        }
+    }
 
     /**
      * This
      *
      */
-    private class MovDragListener implements View.OnDragListener {
+    private class MovReplaceListener implements View.OnDragListener {
         @Override
         public boolean onDrag(View v, DragEvent event) {
             final int action = event.getAction();
+            String descr;
             switch (action) {
                 case DragEvent.ACTION_DRAG_STARTED:
                     // do nothing
                     break;
                 case DragEvent.ACTION_DRAG_ENTERED:
                     // indicate valid drop zone
-                    v.setBackgroundColor( Color.DKGRAY );
+                    descr = event.getClipDescription().getLabel().toString();
+                    if ( descr.equals("from_palMov") )
+                        v.setBackgroundColor( Color.DKGRAY );
                     break;
                 case DragEvent.ACTION_DRAG_EXITED:
-                    v.setBackgroundColor(Color.TRANSPARENT);
+                    descr = event.getClipDescription().getLabel().toString();
+                    if ( descr.equals("from_palMov") )
+                        v.setBackgroundColor(Color.TRANSPARENT);
                     break;
                 case DragEvent.ACTION_DROP:
                     // Dropped,
                     // insert passed movement object
-                    CajuMovIconView icVw = (CajuMovIconView) v;
-                    if (icVw.equals( getView().findViewById(R.id.imageView_player_bot)) ){
-                        Movement mov = (Movement) event.getLocalState();
-                        try {
-                            icVw.getTimeslot().setBotPlayerMov( (Movement) mov.clone());
-                            icVw.setBackgroundColor(Color.TRANSPARENT);
-                            icVw.setImageDrawable(getResources().getDrawable( icVw.getTimeslot().getBotPlayerMov().getMovIconID()));
-                        } catch (CloneNotSupportedException e) {
-                            e.printStackTrace();
+                    descr = event.getClipDescription().getLabel().toString();
+                    if ( descr.equals("from_palMov") ) {
+                        CajuMovIconView icVw = (CajuMovIconView) v;
+                        if (icVw.equals(getView().findViewById(R.id.imageView_player_bot))) {
+                            Movement mov = (Movement) event.getLocalState();
+                            try {
+                                icVw.getTimeslot().setBotPlayerMov((Movement) mov.clone());
+                                icVw.setBackgroundColor(Color.TRANSPARENT);
+                                icVw.setImageDrawable(getResources().getDrawable(icVw.getTimeslot().getBotPlayerMov().getMovIconID()));
+                            } catch (CloneNotSupportedException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    }
-                    if (icVw.equals( getView().findViewById(R.id.imageView_player_top)) ){
-                        Movement mov = (Movement) event.getLocalState();
-                        try {
-                            icVw.getTimeslot().setTopPlayerMov((Movement) mov.clone());
-                            icVw.setBackgroundColor(Color.TRANSPARENT);
-                            icVw.setImageDrawable(getResources().getDrawable(icVw.getTimeslot().getTopPlayerMov().getMovIconID()));
-                        } catch (CloneNotSupportedException e) {
-                            e.printStackTrace();
+                        if (icVw.equals(getView().findViewById(R.id.imageView_player_top))) {
+                            Movement mov = (Movement) event.getLocalState();
+                            try {
+                                icVw.getTimeslot().setTopPlayerMov((Movement) mov.clone());
+                                icVw.setBackgroundColor(Color.TRANSPARENT);
+                                icVw.setImageDrawable(getResources().getDrawable(icVw.getTimeslot().getTopPlayerMov().getMovIconID()));
+                            } catch (CloneNotSupportedException e) {
+                                e.printStackTrace();
+                            }
                         }
+                        // Vibrate for X milliseconds
+                        Vibrator vib = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+                        vib.vibrate(20);
                     }
                     break;
                 case DragEvent.ACTION_DRAG_ENDED:
