@@ -11,6 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.Toast;
 
 import com.mm.caju.caju_seqMdl.DefMovement;
@@ -76,9 +77,13 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
                 showSeqEd();
                 return true;
             case R.id.action_show_seqlib:
+//                Toast toast = Toast.makeText( getApplicationContext(), "Switching to Sequence Library ...", Toast.LENGTH_SHORT);
+//                toast.show();
                 showSeqLib();
                 return true;
             case R.id.action_show_movlib:
+//                Toast toast = Toast.makeText( getApplicationContext(), "Switching to Movement Library ...", Toast.LENGTH_SHORT);
+//                toast.show();
                 showMovLib();
                 return true;
             case R.id.action_settings:
@@ -134,8 +139,6 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
 
 
     private void showSeqLib() {
-        Toast toast = Toast.makeText( getApplicationContext(), "Switching to Sequence Library ...", Toast.LENGTH_SHORT);
-        toast.show();
 
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         if (mSeqLibFragment == null) {
@@ -151,9 +154,6 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
     }
 
     private void showMovLib() {
-
-        Toast toast = Toast.makeText( getApplicationContext(), "Switching to Movement Library ...", Toast.LENGTH_SHORT);
-        toast.show();
 
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         if (mMovLibFragment == null) {
@@ -387,6 +387,11 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
         qd4.setMovIconID(R.mipmap.ic_miscmov_qd4);
         movLib.addMiscMovementToMiscMovList(qd4);
 
+        MiscMovement pont = new MiscMovement();
+        pont.setMovName("Ponte");
+        pont.setMovIconID(R.mipmap.ic_miscmov_pont);
+        movLib.addMiscMovementToMiscMovList(pont);
+
         MiscMovement cont = new MiscMovement();
         cont.setMovName("...");
         cont.setMovIconID(R.mipmap.ic_mov_cont);
@@ -589,6 +594,18 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
     public void showMovLib(View v){
         showMovLib();
     }
+
+    public void deleteMarkedSequencesFromLib(View view) {
+    }
+
+    public void toggleSeqDel(View view) {
+
+        CheckBox enableDelBox = (CheckBox) findViewById(R.id.checkBox_enableDel);
+        if ( enableDelBox.isChecked() )
+            findViewById(R.id.textView_deleteHint).setVisibility( View.VISIBLE );
+        else findViewById(R.id.textView_deleteHint).setVisibility( View.INVISIBLE );
+    }
+
 
     /**
      * A placeholder fragment containing a simple view.

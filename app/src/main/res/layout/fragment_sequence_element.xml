@@ -19,7 +19,7 @@
             android:autoText="false"
             android:elegantTextHeight="true"
             android:layout_alignParentTop="false"
-            android:singleLine="true"
+            android:singleLine="false"
             android:longClickable="false"
             android:alpha="0.5"
             android:textIsSelectable="false"
@@ -35,7 +35,8 @@
             android:selectAllOnFocus="true"
             style="@style/TextAppearance.AppCompat.Widget.PopupMenu.Small"
             android:gravity="left|start"
-            android:layout_toRightOf="@+id/imageView_player_top" />
+            android:layout_toRightOf="@+id/imageView_player_top"
+            android:lines="2" />
 
         <view
             android:layout_width="wrap_content"
@@ -71,7 +72,7 @@
             android:autoText="false"
             android:elegantTextHeight="true"
             android:layout_alignParentTop="false"
-            android:singleLine="true"
+            android:singleLine="false"
             android:longClickable="false"
             android:alpha="0.5"
             android:textIsSelectable="false"
@@ -88,7 +89,8 @@
             style="@style/Base.TextAppearance.AppCompat.Widget.PopupMenu.Small"
             android:nestedScrollingEnabled="false"
             android:gravity="end|right"
-            android:layout_toLeftOf="@+id/imageView_player_bot" />
+            android:layout_toLeftOf="@+id/imageView_player_bot"
+            android:lines="2" />
 
     </RelativeLayout>
 

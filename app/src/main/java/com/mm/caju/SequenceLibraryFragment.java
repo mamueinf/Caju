@@ -4,14 +4,17 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.Vibrator;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.ListAdapter;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mm.caju.caju_seqMdl.Sequence;
 
@@ -26,7 +29,7 @@ import java.util.List;
  * Activities containing this fragment MUST implement the {@link OnFragmentInteractionListener}
  * interface.
  */
-public class SequenceLibraryFragment extends Fragment implements AbsListView.OnItemClickListener {
+public class SequenceLibraryFragment extends Fragment implements AbsListView.OnItemClickListener, AbsListView.OnItemLongClickListener {
 
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -78,6 +81,8 @@ public class SequenceLibraryFragment extends Fragment implements AbsListView.OnI
 
         mAdapter = new SeqLibListViewAdapter(getActivity(),
                 R.layout.seqlib_list_item, CajuMainActivity.getCajuSequenceLib().getSequenceList() );
+
+
     }
 
     @Override
@@ -89,8 +94,9 @@ public class SequenceLibraryFragment extends Fragment implements AbsListView.OnI
         mListView = (AbsListView) view.findViewById(android.R.id.list);
         ((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
 
-        // Set OnItemClickListener so we can be notified on item clicks
+        // Set fragment itself as OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
+        mListView.setOnItemLongClickListener(this);
 
         return view;
     }
@@ -112,6 +118,15 @@ public class SequenceLibraryFragment extends Fragment implements AbsListView.OnI
         mListener = null;
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        Toast toast = Toast.makeText(getActivity().getApplicationContext(), "Library saved ...", Toast.LENGTH_SHORT);
+        toast.show();
+
+        ((CajuMainActivity)getActivity()).saveSeqLib();
+    }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -122,6 +137,20 @@ public class SequenceLibraryFragment extends Fragment implements AbsListView.OnI
         }
     }
 
+    @Override
+    public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
+
+        CheckBox enableDelBox = (CheckBox) getActivity().findViewById(R.id.checkBox_enableDel);
+        if ( enableDelBox.isChecked() ) {
+            Sequence toRemove = (Sequence) mAdapter.getItem(position);
+            ((ArrayAdapter) mAdapter).remove(toRemove);
+
+            // Vibrate for X milliseconds
+            Vibrator vib = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+            vib.vibrate(50);
+        }
+        return false;
+    }
 
     /**
      * The default content for this Fragment has a TextView that is shown when
@@ -135,6 +164,8 @@ public class SequenceLibraryFragment extends Fragment implements AbsListView.OnI
             ((TextView) emptyView).setText(emptyText);
         }
     }
+
+
 
     /**
      * This interface must be implemented by activities that contain this
@@ -191,5 +222,7 @@ public class SequenceLibraryFragment extends Fragment implements AbsListView.OnI
 
             return convertView;
         }
+
+
     }
 }
