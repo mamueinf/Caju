@@ -13,16 +13,19 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:textAppearance="?android:attr/textAppearanceSmall"
-        android:id="@+id/textView_seqDate"
+        android:id="@+id/textView_seqTitle"
         android:layout_gravity="center_vertical"
-        android:padding="@dimen/abc_action_bar_default_padding_material" />
+        android:padding="@dimen/abc_action_bar_default_padding_material"
+        android:lines="2" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/textView_seqTitle"
-        android:layout_gravity="center_vertical"
-        android:padding="@dimen/abc_action_bar_default_padding_material" />
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:id="@+id/textView_seqDate"
+        android:layout_gravity="center_vertical|right"
+        android:padding="@dimen/abc_action_bar_default_padding_material"
+        android:lines="2"
+        android:gravity="right" />
 
 </LinearLayout>

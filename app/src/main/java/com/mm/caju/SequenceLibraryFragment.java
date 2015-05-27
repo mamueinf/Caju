@@ -142,14 +142,20 @@ public class SequenceLibraryFragment extends Fragment implements AbsListView.OnI
 
         CheckBox enableDelBox = (CheckBox) getActivity().findViewById(R.id.checkBox_enableDel);
         if ( enableDelBox.isChecked() ) {
-            Sequence toRemove = (Sequence) mAdapter.getItem(position);
-            ((ArrayAdapter) mAdapter).remove(toRemove);
-
+            // delete sequence from app
+            deleteSequence( (Sequence) mAdapter.getItem(position) );
             // Vibrate for X milliseconds
             Vibrator vib = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
             vib.vibrate(50);
         }
         return false;
+    }
+
+    private void deleteSequence(Sequence toRemove) {
+
+        ((ArrayAdapter) mAdapter).remove(toRemove);
+        if ( toRemove.equals( CajuMainActivity.getCurrentSequence()) )
+            CajuMainActivity.setCurrentSequence( null );
     }
 
     /**

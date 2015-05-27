@@ -27,7 +27,9 @@ import org.simpleframework.xml.Serializer;
 import org.simpleframework.xml.core.Persister;
 
 import java.io.File;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Iterator;
 import java.util.LinkedHashSet;
 
@@ -87,7 +89,9 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
                 showMovLib();
                 return true;
             case R.id.action_settings:
-                showSettings();
+                Toast toast = Toast.makeText(getApplicationContext(), "No options yet ...", Toast.LENGTH_SHORT);
+                toast.show();
+//                showSettings();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
@@ -105,11 +109,15 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
             // if not, and ...
             // if already in editor, reselecting the editor should open it with a new blank sequence
             if (mSeqEdFragment.isVisible()) {
-                // therefore, remove the sequence, remove the fragment
+                // therefore, remove the fragment
+                mSeqEdFragment.onPause();
                 FragmentTransaction transaction = getFragmentManager().beginTransaction();
-                transaction.remove( mSeqEdFragment );
+                transaction.remove(mSeqEdFragment);
                 transaction.commit();
+
+                // remove sequence
                 currentSequence = null;
+
                 Toast toast = Toast.makeText(getApplicationContext(), "New Sequence ...", Toast.LENGTH_SHORT);
                 toast.show();
             }
@@ -118,12 +126,11 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
         // create editable sequence, if necessary
         if ( currentSequence == null ) {
             currentSequence = new Sequence();
-            currentSequence.setSeqTitle("New Sequence");
+            SimpleDateFormat df = new SimpleDateFormat("dd.MM.yy - HH:mm");
+            String formattedDate = df.format(Calendar.getInstance().getTime());
+            currentSequence.setSeqTitle("Sequence from\n" + formattedDate );
             currentSequence.setTimeslots(new ArrayList<TimeSlot>());
         }
-
-        // associate sequence with editor
-        mSeqEdFragment.setCurrentSequence(currentSequence);
 
         // open editor fragment or restore editor fragment from backstack
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -170,8 +177,7 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
 
     private void showSettings() {
 
-        Toast toast = Toast.makeText(getApplicationContext(), "No options yet ...", Toast.LENGTH_SHORT);
-        toast.show();
+
     }
 
 

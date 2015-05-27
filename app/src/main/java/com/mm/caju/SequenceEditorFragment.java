@@ -52,8 +52,6 @@ public class SequenceEditorFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
-    private Sequence currentSequence = null;
-
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -84,7 +82,7 @@ public class SequenceEditorFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        currentSequence = CajuMainActivity.getCurrentSequence();
+//        currentSequence = CajuMainActivity.getCurrentSequence();
     }
 
     @Override
@@ -199,7 +197,7 @@ public class SequenceEditorFragment extends Fragment {
          * */
         LinearLayout seqLayout = (LinearLayout) rootView.findViewById(R.id.layout_seq);
 
-        currentSequence = CajuMainActivity.getCurrentSequence();
+        Sequence currentSequence = CajuMainActivity.getCurrentSequence();
 
         if ( currentSequence != null ) {
             // REUSE iterator
@@ -234,12 +232,14 @@ public class SequenceEditorFragment extends Fragment {
     public void onPause() {
         super.onPause();
 
-        SimpleDateFormat df = new SimpleDateFormat("dd.MMM.yyyy-HH:mm");
+        SimpleDateFormat df = new SimpleDateFormat("HH:mm-dd.MM.");
         String formattedDate = df.format(Calendar.getInstance().getTime());
+
+        Sequence currentSequence = CajuMainActivity.getCurrentSequence();
 
         if ( currentSequence != null) {
             if (!currentSequence.getTimeslots().isEmpty()) {
-                currentSequence.setDate(formattedDate);
+                currentSequence.setDate("last seen\n" + formattedDate);
                 if (!getCajuSequenceLib().getSequenceList().contains(currentSequence))
                     getCajuSequenceLib().addSequenceToSequenceList(currentSequence);
 
@@ -339,8 +339,11 @@ public class SequenceEditorFragment extends Fragment {
     private class AddMovDragListener implements View.OnDragListener {
         @Override
         public boolean onDrag(View v, DragEvent event) {
+
             int action = event.getAction();
             String descr;
+            Sequence currentSequence = CajuMainActivity.getCurrentSequence();
+
             switch (action) {
                 case DragEvent.ACTION_DRAG_STARTED:
                     // do nothing
@@ -450,13 +453,5 @@ public class SequenceEditorFragment extends Fragment {
             return true;
         }
     }
-
-    /**
-     * Getters and Setters
-     * */
-    public void setCurrentSequence(Sequence currentSequence) {
-        this.currentSequence = currentSequence;
-    }
-
 
 }
