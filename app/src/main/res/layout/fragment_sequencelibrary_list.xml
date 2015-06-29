@@ -9,56 +9,56 @@
 
         <ListView android:id="@android:id/list" android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:layout_alignParentTop="true"
-            android:layout_above="@+id/imageView_seqlib_trash" />
+            android:layout_above="@+id/imageView_seqlib_trash"
+            android:layout_alignParentTop="true" />
 
         <TextView android:id="@android:id/empty" android:layout_width="match_parent"
             android:layout_height="match_parent" android:gravity="center" />
 
         <ImageView
+            android:id="@+id/imageView_seqlib_trash"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/imageView_seqlib_trash"
-            android:src="@mipmap/ic_mov_del"
             android:layout_alignParentBottom="true"
             android:layout_centerHorizontal="true"
             android:contentDescription="@string/dots"
-            android:onClick="deleteMarkedSequencesFromLib" />
+            android:src="@mipmap/ic_mov_del" />
 
         <CheckBox
+            android:id="@+id/checkBox_enableDel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/checkBox_enableDel"
-            android:layout_alignTop="@+id/imageView_seqlib_trash"
             android:layout_alignBottom="@+id/imageView_seqlib_trash"
+            android:layout_alignTop="@+id/imageView_seqlib_trash"
             android:layout_toLeftOf="@+id/imageView_seqlib_trash"
             android:layout_toStartOf="@+id/imageView_seqlib_trash"
             android:onClick="toggleSeqDel" />
 
         <TextView
+            android:id="@+id/textView_deleteHint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Long click on Sequence to DELETE it !"
-            android:id="@+id/textView_deleteHint"
-            android:layout_toRightOf="@+id/imageView_seqlib_trash"
-            android:layout_alignTop="@+id/imageView_seqlib_trash"
-            android:layout_alignParentRight="true"
-            android:layout_alignParentEnd="true"
             android:layout_alignParentBottom="true"
+            android:layout_alignParentEnd="true"
+            android:layout_alignParentRight="true"
+            android:layout_alignTop="@+id/imageView_seqlib_trash"
+            android:layout_toRightOf="@+id/imageView_seqlib_trash"
             android:gravity="center_vertical"
+            android:text="Long click on Sequence to DELETE it !"
+            android:textColor="#ffff0000"
             android:visibility="invisible" />
 
         <TextView
+            android:id="@+id/textView_enableDelHint"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Enable deleting ..."
-            android:id="@+id/textView_enableDelHint"
             android:layout_alignBottom="@+id/checkBox_enableDel"
-            android:layout_toLeftOf="@+id/checkBox_enableDel"
-            android:layout_alignTop="@+id/checkBox_enableDel"
             android:layout_alignParentLeft="true"
             android:layout_alignParentStart="true"
-            android:gravity="center_vertical|right" />
+            android:layout_alignTop="@+id/checkBox_enableDel"
+            android:layout_toLeftOf="@+id/checkBox_enableDel"
+            android:gravity="center_vertical|right"
+            android:text="Enable deleting ..." />
 
     </RelativeLayout>
 

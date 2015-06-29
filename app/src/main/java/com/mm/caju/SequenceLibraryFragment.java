@@ -53,6 +53,13 @@ public class SequenceLibraryFragment extends Fragment implements AbsListView.OnI
      */
     private ListAdapter mAdapter;
 
+    /**
+     * Mandatory empty constructor for the fragment manager to instantiate the
+     * fragment (e.g. upon screen orientation changes).
+     */
+    public SequenceLibraryFragment() {
+    }
+
     // TODO: Rename and change types of parameters
     public static SequenceLibraryFragment newInstance(String param1, String param2) {
         SequenceLibraryFragment fragment = new SequenceLibraryFragment();
@@ -61,13 +68,6 @@ public class SequenceLibraryFragment extends Fragment implements AbsListView.OnI
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
         return fragment;
-    }
-
-    /**
-     * Mandatory empty constructor for the fragment manager to instantiate the
-     * fragment (e.g. upon screen orientation changes).
-     */
-    public SequenceLibraryFragment() {
     }
 
     @Override
@@ -92,7 +92,7 @@ public class SequenceLibraryFragment extends Fragment implements AbsListView.OnI
 
         // Set the adapter
         mListView = (AbsListView) view.findViewById(android.R.id.list);
-        ((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
+        mListView.setAdapter(mAdapter);
 
         // Set fragment itself as OnItemClickListener so we can be notified on item clicks
         mListView.setOnItemClickListener(this);
@@ -126,6 +126,9 @@ public class SequenceLibraryFragment extends Fragment implements AbsListView.OnI
         toast.show();
 
         ((CajuMainActivity)getActivity()).saveSeqLib();
+
+        CheckBox enableDelBox = (CheckBox) getActivity().findViewById(R.id.checkBox_enableDel);
+        enableDelBox.setChecked(false);
     }
 
     @Override
@@ -185,7 +188,7 @@ public class SequenceLibraryFragment extends Fragment implements AbsListView.OnI
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onSeqLibFragmentInteraction(Sequence selSeq);
+        void onSeqLibFragmentInteraction(Sequence selSeq);
     }
 
 
@@ -200,12 +203,6 @@ public class SequenceLibraryFragment extends Fragment implements AbsListView.OnI
                                      List<Sequence> items) {
             super(context, resourceId, items);
             this.context = context;
-        }
-
-        /*private view holder class*/
-        private class ViewHolder {
-            TextView txtDate;
-            TextView txtTitle;
         }
 
         public View getView(int position, View convertView, ViewGroup parent) {
@@ -227,6 +224,12 @@ public class SequenceLibraryFragment extends Fragment implements AbsListView.OnI
             holder.txtDate.setText(rowItemSeq.getDate());
 
             return convertView;
+        }
+
+        /*private view holder class*/
+        private class ViewHolder {
+            TextView txtDate;
+            TextView txtTitle;
         }
 
 

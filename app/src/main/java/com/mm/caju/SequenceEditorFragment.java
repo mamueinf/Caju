@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.os.Vibrator;
 import android.view.DragEvent;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -30,6 +31,8 @@ import java.util.Iterator;
 
 import static com.mm.caju.CajuMainActivity.getCajuSequenceLib;
 import static com.mm.caju.CajuMainActivity.getCurrentSequence;
+import static com.mm.caju.CajuMainActivity.getmSeqEdhelpFragment;
+import static com.mm.caju.CajuMainActivity.setmSeqEdhelpFragment;
 
 
 /**
@@ -52,6 +55,11 @@ public class SequenceEditorFragment extends Fragment {
 
     private OnFragmentInteractionListener mListener;
 
+
+    public SequenceEditorFragment() {
+        // Required empty public constructor
+    }
+
     /**
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
@@ -70,10 +78,6 @@ public class SequenceEditorFragment extends Fragment {
         return fragment;
     }
 
-    public SequenceEditorFragment() {
-        // Required empty public constructor
-    }
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -82,7 +86,7 @@ public class SequenceEditorFragment extends Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-//        currentSequence = CajuMainActivity.getCurrentSequence();
+
     }
 
     @Override
@@ -132,7 +136,9 @@ public class SequenceEditorFragment extends Fragment {
             // Sets a long click listener for the ImageView using a listener object that
             // implements the OnLongClickListener interface
             imgView.setOnLongClickListener( new PaletteItemOnLongClickListener() );
+//            imgView.setOnTouchListener(new PaletteItemOnTouchListener());
         }
+
 
         /**
          * fill DefMovPalette with elements
@@ -160,6 +166,7 @@ public class SequenceEditorFragment extends Fragment {
             // Sets a long click listener for the ImageView using a listener object that
             // implements the OnLongClickListener interface
             imgView.setOnLongClickListener(new PaletteItemOnLongClickListener());
+//            imgView.setOnTouchListener(new PaletteItemOnTouchListener());
         }
 
         /**
@@ -188,6 +195,7 @@ public class SequenceEditorFragment extends Fragment {
             // Sets a long click listener for the ImageView using a listener object that
             // implements the OnLongClickListener interface
             imgView.setOnLongClickListener(new PaletteItemOnLongClickListener());
+//            imgView.setOnTouchListener(new PaletteItemOnTouchListener());
         }
 
 
@@ -249,6 +257,22 @@ public class SequenceEditorFragment extends Fragment {
         }
 
         ((CajuMainActivity)getActivity()).saveSeqLib();
+
+        ((CajuMainActivity) getActivity()).hideSeqEdHelpFragment(null);
+
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (getCurrentSequence().getTimeslots().isEmpty()) {
+            setmSeqEdhelpFragment(new SeqEdHelpFragment());
+            getFragmentManager().beginTransaction()
+                    .add(R.id.container, getmSeqEdhelpFragment())
+                    .commit();
+        }
+
     }
 
     @Override
@@ -281,7 +305,7 @@ public class SequenceEditorFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onSeqEdFragmentInteraction(Uri uri);
+        void onSeqEdFragmentInteraction(Uri uri);
     }
 
 
@@ -306,6 +330,32 @@ public class SequenceEditorFragment extends Fragment {
         }
     }
 
+    private class PaletteItemOnTouchListener implements View.OnTouchListener {
+
+        /**
+         * On touch events conflict with the scoll ability of the embedding scoll view  ... work to be done ...
+         */
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+
+            ClipData dragData = ClipData.newPlainText("from_palMov", ""); // do not carry any text data
+            View.DragShadowBuilder myShadow = new View.DragShadowBuilder(v);
+
+            // Starts the drag
+            v.startDrag(dragData,  // the data to be dragged
+                    myShadow,  // the drag shadow builder
+                    ((CajuPaletteIconView) v).getMovement(),      // local data
+                    0          // flags (not currently used, set to 0)
+            );
+
+            // Vibrate for X milliseconds
+            Vibrator vib = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
+            vib.vibrate(20);
+
+            return false;
+        }
+    }
+
     /**
      * This
      *
@@ -326,7 +376,7 @@ public class SequenceEditorFragment extends Fragment {
 
             // Vibrate for X milliseconds
             Vibrator vib = (Vibrator) getActivity().getSystemService(Context.VIBRATOR_SERVICE);
-            vib.vibrate(20);
+            vib.vibrate(30);
 
             return true;
         }
@@ -453,5 +503,6 @@ public class SequenceEditorFragment extends Fragment {
             return true;
         }
     }
+
 
 }

@@ -1,8 +1,8 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/fragment_top"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
     android:paddingBottom="@dimen/activity_vertical_margin"
     android:paddingLeft="@dimen/activity_horizontal_margin"
     android:paddingRight="@dimen/activity_horizontal_margin"
@@ -10,44 +10,44 @@
     tools:context=".SequenceEditorFragment" >
 
     <ScrollView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
         android:id="@+id/scrollView_seq"
-        android:layout_alignParentRight="true"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/imageView_seqed_trashbin"
         android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
         android:layout_alignParentStart="true"
-        android:layout_alignParentTop="true"
-        android:layout_above="@+id/imageView_seqed_trashbin" >
+        android:layout_alignParentTop="true">
 
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
             <LinearLayout
-                android:orientation="vertical"
+                android:id="@+id/layout_seq"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/layout_seq"
-                android:layout_alignParentTop="true">
+                android:layout_alignParentTop="true"
+                android:orientation="vertical">
 
             </LinearLayout>
 
             <FrameLayout
-                tools:context="com.mm.caju.SequenceElementFragment"
                 xmlns:android="http://schemas.android.com/apk/res/android"
                 xmlns:tools="http://schemas.android.com/tools"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_below="@+id/layout_seq">
+                android:layout_below="@+id/layout_seq"
+                tools:context="com.mm.caju.SequenceElementFragment">
 
                 <RelativeLayout
-                    tools:context=".SequenceElementFragment"
                     xmlns:android="http://schemas.android.com/apk/res/android"
                     xmlns:tools="http://schemas.android.com/tools"
+                    android:id="@+id/relativeLayout2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:id="@+id/relativeLayout2" >
+                    tools:context=".SequenceElementFragment">
 
                     <ImageView
                         android:id="@+id/imageView_addTopMov"
@@ -55,10 +55,10 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentLeft="false"
                         android:layout_alignParentTop="false"
-                        android:src="@mipmap/ic_player_bot"
-                        android:contentDescription="@string/dots"
                         android:layout_centerVertical="true"
-                        android:layout_toRightOf="@+id/textView" />
+                        android:layout_toRightOf="@+id/textView"
+                        android:contentDescription="@string/dots"
+                        android:src="@mipmap/ic_mov_add" />
 
                     <ImageView
                         android:id="@+id/imageView_addBotMov"
@@ -66,19 +66,19 @@
                         android:layout_height="wrap_content"
                         android:layout_alignParentBottom="false"
                         android:layout_alignParentTop="false"
-                        android:src="@mipmap/ic_player_bot"
-                        android:contentDescription="@string/dots"
                         android:layout_centerVertical="true"
-                        android:layout_toLeftOf="@+id/textView" />
+                        android:layout_toLeftOf="@+id/textView"
+                        android:contentDescription="@string/dots"
+                        android:src="@mipmap/ic_mov_add" />
 
                     <TextView
+                        android:id="@+id/textView"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textAppearance="?android:attr/textAppearanceSmall"
-                        android:text="@string/dots"
                         android:layout_centerInParent="true"
-                        android:id="@+id/textView"
-                        android:padding="@dimen/abc_button_padding_vertical_material" />
+                        android:padding="@dimen/abc_action_bar_default_padding_material"
+                        android:text="+1"
+                        android:textAppearance="?android:attr/textAppearanceSmall" />
 
                 </RelativeLayout>
             </FrameLayout>
@@ -87,42 +87,42 @@
 
     <HorizontalScrollView
         android:id="@+id/horizontalScrollView_mov_misc"
-        android:layout_width="wrap_content"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_gravity="bottom|left"
         android:layout_alignParentBottom="true"
-        android:layout_alignParentRight="true"
         android:layout_alignParentEnd="true"
         android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true">
+        android:layout_alignParentRight="true"
+        android:layout_alignParentStart="true"
+        android:layout_gravity="bottom|left">
 
 
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:id="@+id/layout_MiscMovLib"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:id="@+id/layout_MiscMovLib" />
+            android:orientation="horizontal" />
     </HorizontalScrollView>
 
     <HorizontalScrollView
         android:id="@+id/horizontalScrollView_mov_off"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_alignParentLeft="false"
-        android:layout_alignParentTop="false"
-        android:layout_alignParentEnd="false"
-        android:layout_alignParentStart="false"
+        android:layout_above="@+id/horizontalScrollView_mov_misc"
         android:layout_alignParentBottom="false"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="false"
         android:layout_alignParentRight="true"
-        android:layout_toRightOf="@+id/imageView_seqed_trashbin"
-        android:layout_above="@+id/horizontalScrollView_mov_misc">
+        android:layout_alignParentStart="false"
+        android:layout_alignParentTop="false"
+        android:layout_toRightOf="@+id/imageView_seqed_trashbin">
 
         <LinearLayout
+            android:id="@+id/layout_OffMovLib"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:id="@+id/layout_OffMovLib">
+            android:orientation="horizontal">
 
         </LinearLayout>
     </HorizontalScrollView>
@@ -131,29 +131,29 @@
         android:id="@+id/horizontalScrollView_mov_def"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_above="@+id/horizontalScrollView_mov_misc"
         android:layout_alignParentBottom="false"
         android:layout_alignParentLeft="true"
-        android:layout_gravity="bottom|left"
-        android:layout_toLeftOf="@+id/imageView_seqed_trashbin"
         android:layout_alignParentStart="true"
-        android:layout_above="@+id/horizontalScrollView_mov_misc">
+        android:layout_gravity="bottom|left"
+        android:layout_toLeftOf="@+id/imageView_seqed_trashbin">
 
         <LinearLayout
-            android:orientation="horizontal"
+            android:id="@+id/layout_DefMovLib"
             android:layout_width="wrap_content"
             android:layout_height="fill_parent"
-            android:id="@+id/layout_DefMovLib"></LinearLayout>
+            android:orientation="horizontal"></LinearLayout>
     </HorizontalScrollView>
 
     <ImageView
+        android:id="@+id/imageView_seqed_trashbin"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/imageView_seqed_trashbin"
-        android:src="@mipmap/ic_mov_del"
+        android:layout_above="@+id/horizontalScrollView_mov_misc"
         android:layout_alignParentBottom="false"
         android:layout_centerHorizontal="true"
         android:contentDescription="@string/dots"
-        android:layout_above="@+id/horizontalScrollView_mov_misc"
-        android:padding="@dimen/abc_action_bar_default_padding_material" />
+        android:padding="@dimen/abc_action_bar_default_padding_material"
+        android:src="@mipmap/ic_mov_del" />
 
 </RelativeLayout>

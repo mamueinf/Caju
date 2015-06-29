@@ -34,7 +34,7 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 
 
-public class CajuMainActivity extends ActionBarActivity implements SequenceLibraryFragment.OnFragmentInteractionListener, SequenceElementFragment.OnFragmentInteractionListener, MovementLibraryFragment2.OnFragmentInteractionListener, SequenceEditorFragment.OnFragmentInteractionListener {
+public class CajuMainActivity extends ActionBarActivity implements SequenceLibraryFragment.OnFragmentInteractionListener, MovementLibraryFragment2.OnFragmentInteractionListener, SequenceEditorFragment.OnFragmentInteractionListener {
 
 
     private static MovementLib cajuMovementLib = null;
@@ -44,6 +44,35 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
     private static SequenceEditorFragment mSeqEdFragment = null;
     private static SequenceLibraryFragment mSeqLibFragment = null;
     private static MovementLibraryFragment2 mMovLibFragment = null;
+    private static Fragment mSeqEdhelpFragment = null;
+
+    /**
+     * Getters and Setters
+     */
+
+    public static MovementLib getCajuMovementLib() {
+        return cajuMovementLib;
+    }
+
+    public static SequenceLib getCajuSequenceLib() {
+        return cajuSequenceLib;
+    }
+
+    public static Sequence getCurrentSequence() {
+        return currentSequence;
+    }
+
+    public static void setCurrentSequence(Sequence currentSequence) {
+        CajuMainActivity.currentSequence = currentSequence;
+    }
+
+    public static Fragment getmSeqEdhelpFragment() {
+        return mSeqEdhelpFragment;
+    }
+
+    public static void setmSeqEdhelpFragment(Fragment mSeqEdhelpFragment) {
+        CajuMainActivity.mSeqEdhelpFragment = mSeqEdhelpFragment;
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,7 +89,6 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
         loadMovLib();
         loadSeqLib();
     }
-
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
@@ -97,8 +125,6 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
                 return super.onOptionsItemSelected(item);
         }
     }
-
-
 
     private void showSeqEd() {
 
@@ -144,7 +170,6 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
         }
     }
 
-
     private void showSeqLib() {
 
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
@@ -166,11 +191,11 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
         if (mMovLibFragment == null) {
             mMovLibFragment = new MovementLibraryFragment2();
         }
-        if (!getFragmentManager().popBackStackImmediate("show_movlib", 0)){
+        if (!getFragmentManager().popBackStackImmediate("show_movlib", 0)) {
             transaction.replace(R.id.container, mMovLibFragment);
             transaction.addToBackStack("show_movlib");
             transaction.commit();
-        } else{
+        } else {
             getFragmentManager().popBackStackImmediate("show_movlib", 0);
         }
     }
@@ -179,8 +204,6 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
 
 
     }
-
-
 
     private void loadSeqLib() {
         if (cajuSequenceLib == null) {
@@ -194,11 +217,11 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
             // Deserialize the SeqLib from file
             if (!xmlFile.exists()) {
                 cajuSequenceLib = new SequenceLib();
-                cajuSequenceLib.setSequenceList( new ArrayList<Sequence>() );
+                cajuSequenceLib.setSequenceList(new ArrayList<Sequence>());
                 cajuSequenceLib.addSequenceToSequenceList(createExampleSequence());
                 saveSeqLib();
 
-                Toast toast = Toast.makeText( getApplicationContext(), " Empty SeqLib created ...", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(getApplicationContext(), " Empty SeqLib created ...", Toast.LENGTH_SHORT);
                 toast.show();
 
             } else
@@ -206,7 +229,7 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
                     Serializer serializer = new Persister();
                     cajuSequenceLib = serializer.read(SequenceLib.class, xmlFile);
 
-                    Toast toast = Toast.makeText( getApplicationContext(), "SeqLib read from file ...", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(getApplicationContext(), "SeqLib read from file ...", Toast.LENGTH_SHORT);
                     toast.show();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -215,7 +238,7 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
         }
     }
 
-    protected void saveSeqLib(){
+    protected void saveSeqLib() {
 
         //to this path add a new directory path and create new App dir
         File appDir = new File(Environment.getExternalStorageDirectory().getAbsolutePath() + "/Caju");
@@ -249,14 +272,14 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
             // Deserialize the MovLib from file
             if (!xmlFile.exists()) {
                 cajuMovementLib = createDefaultMovLib(xmlFile);
-                Toast toast = Toast.makeText( getApplicationContext(), " Default MovLib created ...", Toast.LENGTH_SHORT);
+                Toast toast = Toast.makeText(getApplicationContext(), " Default MovLib created ...", Toast.LENGTH_SHORT);
                 toast.show();
 
             } else
                 try {
                     Serializer serializer = new Persister();
                     cajuMovementLib = serializer.read(MovementLib.class, xmlFile);
-                    Toast toast = Toast.makeText( getApplicationContext(), "MovLib read from file ...", Toast.LENGTH_SHORT);
+                    Toast toast = Toast.makeText(getApplicationContext(), "MovLib read from file ...", Toast.LENGTH_SHORT);
                     toast.show();
                 } catch (Exception e) {
                     e.printStackTrace();
@@ -271,9 +294,9 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
          * data structure
          */
         MovementLib movLib = new MovementLib();
-        movLib.setOffMovList( new LinkedHashSet<OffMovement>() );
-        movLib.setDefMovList( new LinkedHashSet<DefMovement>() );
-        movLib.setMiscMovList( new LinkedHashSet<MiscMovement>() );
+        movLib.setOffMovList(new LinkedHashSet<OffMovement>());
+        movLib.setDefMovList(new LinkedHashSet<DefMovement>());
+        movLib.setMiscMovList(new LinkedHashSet<MiscMovement>());
 
         // Def
         DefMovement ndA = new DefMovement();
@@ -405,13 +428,10 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
 
 
         /* Serialize the MovLib for next time */
-        try
-        {
+        try {
             Serializer serializer = new Persister();
             serializer.write(movLib, xmlFile);
-        }
-        catch (Exception e)
-        {
+        } catch (Exception e) {
             e.printStackTrace();
         }
 
@@ -422,24 +442,24 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
     private Sequence createExampleSequence() {
 
         Sequence seq = new Sequence();
-        seq.setSeqTitle( "Example Sequence" );
+        seq.setSeqTitle("Example Sequence");
         seq.setDate("long time ago ...");
 
         TimeSlot t1 = new TimeSlot();
         t1.setTime(1);
 
         Iterator it = cajuMovementLib.getMiscMovList().iterator();
-        while ( it.hasNext() ) {
+        while (it.hasNext()) {
 
             Movement mov = (Movement) it.next();
-            if ( mov.getMovName().equals("Ginga")) {
+            if (mov.getMovName().equals("Ginga")) {
                 try {
-                    t1.setTopPlayerMov( (Movement)mov.clone());
+                    t1.setTopPlayerMov((Movement) mov.clone());
                 } catch (CloneNotSupportedException e) {
                     e.printStackTrace();
                 }
                 try {
-                    t1.setBotPlayerMov((Movement)mov.clone());
+                    t1.setBotPlayerMov((Movement) mov.clone());
                 } catch (CloneNotSupportedException e) {
                     e.printStackTrace();
                 }
@@ -451,12 +471,12 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
         t2.setTime(2);
 
         it = cajuMovementLib.getOffMovList().iterator();
-        while ( it.hasNext() ) {
+        while (it.hasNext()) {
 
             Movement mov = (Movement) it.next();
-            if ( mov.getMovName().equals("Rabo de Arraia")) {
+            if (mov.getMovName().equals("Rabo de Arraia")) {
                 try {
-                    t2.setTopPlayerMov((Movement)mov.clone());
+                    t2.setTopPlayerMov((Movement) mov.clone());
                 } catch (CloneNotSupportedException e) {
                     e.printStackTrace();
                 }
@@ -464,12 +484,12 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
             }
         }
         it = cajuMovementLib.getDefMovList().iterator();
-        while ( it.hasNext() ) {
+        while (it.hasNext()) {
 
             Movement mov = (Movement) it.next();
-            if ( mov.getMovName().equals("Negativa de Angola")) {
+            if (mov.getMovName().equals("Negativa de Angola")) {
                 try {
-                    t2.setBotPlayerMov((Movement)mov.clone());
+                    t2.setBotPlayerMov((Movement) mov.clone());
                 } catch (CloneNotSupportedException e) {
                     e.printStackTrace();
                 }
@@ -481,12 +501,12 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
         t3.setTime(3);
 
         it = cajuMovementLib.getMiscMovList().iterator();
-        while ( it.hasNext() ) {
+        while (it.hasNext()) {
 
             Movement mov = (Movement) it.next();
-            if ( mov.getMovName().equals("V... de Jogo")) {
+            if (mov.getMovName().equals("V... de Jogo")) {
                 try {
-                    t3.setTopPlayerMov((Movement)mov.clone());
+                    t3.setTopPlayerMov((Movement) mov.clone());
                 } catch (CloneNotSupportedException e) {
                     e.printStackTrace();
                 }
@@ -499,12 +519,12 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
         t4.setTime(4);
 
         it = cajuMovementLib.getOffMovList().iterator();
-        while ( it.hasNext() ) {
+        while (it.hasNext()) {
 
             Movement mov = (Movement) it.next();
-            if ( mov.getMovName().equals("Rabo de Arraia")) {
+            if (mov.getMovName().equals("Rabo de Arraia")) {
                 try {
-                    t4.setTopPlayerMov((Movement)mov.clone());
+                    t4.setTopPlayerMov((Movement) mov.clone());
                 } catch (CloneNotSupportedException e) {
                     e.printStackTrace();
                 }
@@ -512,12 +532,12 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
             }
         }
         it = cajuMovementLib.getMiscMovList().iterator();
-        while ( it.hasNext() ) {
+        while (it.hasNext()) {
 
             Movement mov = (Movement) it.next();
-            if ( mov.getMovName().equals("Role")) {
+            if (mov.getMovName().equals("Role")) {
                 try {
-                    t4.setBotPlayerMov((Movement)mov.clone());
+                    t4.setBotPlayerMov((Movement) mov.clone());
                 } catch (CloneNotSupportedException e) {
                     e.printStackTrace();
                 }
@@ -533,7 +553,6 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
         return seq;
     }
 
-
     @Override
     public void onSeqEdFragmentInteraction(Uri uri) {
 
@@ -541,67 +560,33 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
 
     @Override
     public void onMovLibFragmentInteraction(String id) {
-        Toast toast = Toast.makeText( getApplicationContext(), "Thanks for clicking the move ...", Toast.LENGTH_SHORT);
-        toast.show();
-    }
-
-    @Override
-    public void onSeqElementFragmentInteraction(Uri uri) {
-
+//        Toast toast = Toast.makeText( getApplicationContext(), "Thanks for clicking the move ...", Toast.LENGTH_SHORT);
+//        toast.show();
     }
 
     @Override
     public void onSeqLibFragmentInteraction(Sequence selSeq) {
 
-        Toast toast = Toast.makeText( getApplicationContext(), "Sequence opened ...", Toast.LENGTH_SHORT);
+        Toast toast = Toast.makeText(getApplicationContext(), "Sequence opened ...", Toast.LENGTH_SHORT);
         toast.show();
 
         currentSequence = selSeq;
         showSeqEd();
     }
 
-
-    /**
-     * Getters and Setters
-     */
-
-    public static MovementLib getCajuMovementLib() {
-        return cajuMovementLib;
-    }
-
-    public static void setCajuMovementLib(MovementLib cajuMovementLib) {
-        CajuMainActivity.cajuMovementLib = cajuMovementLib;
-    }
-
-    public static SequenceLib getCajuSequenceLib() {
-        return cajuSequenceLib;
-    }
-
-    public static void setCajuSequenceLib(SequenceLib cajuSequenceLib) {
-        CajuMainActivity.cajuSequenceLib = cajuSequenceLib;
-    }
-
-    public static Sequence getCurrentSequence() {
-        return currentSequence;
-    }
-
-    public static void setCurrentSequence(Sequence currentSequence) {
-        CajuMainActivity.currentSequence = currentSequence;
-    }
-
     public void showSeqEd(View v){
+
         showSeqEd();
     }
 
     public void showSeqLib(View v){
+
         showSeqLib();
     }
 
     public void showMovLib(View v){
-        showMovLib();
-    }
 
-    public void deleteMarkedSequencesFromLib(View view) {
+        showMovLib();
     }
 
     public void toggleSeqDel(View view) {
@@ -610,6 +595,13 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
         if ( enableDelBox.isChecked() )
             findViewById(R.id.textView_deleteHint).setVisibility( View.VISIBLE );
         else findViewById(R.id.textView_deleteHint).setVisibility( View.INVISIBLE );
+    }
+
+    public void hideSeqEdHelpFragment(View v) {
+
+        getFragmentManager().beginTransaction()
+                .remove(mSeqEdhelpFragment)
+                .commit();
     }
 
 
@@ -624,8 +616,7 @@ public class CajuMainActivity extends ActionBarActivity implements SequenceLibra
         @Override
         public View onCreateView(LayoutInflater inflater, ViewGroup container,
                                  Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_main, container, false);
-            return rootView;
+            return inflater.inflate(R.layout.fragment_main, container, false);
         }
 
 

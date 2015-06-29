@@ -5,92 +5,93 @@
     <!-- TODO: Update blank fragment layout -->
 
     <RelativeLayout
-        tools:context=".SequenceElementFragment"
         xmlns:android="http://schemas.android.com/apk/res/android"
         xmlns:tools="http://schemas.android.com/tools"
+        android:id="@+id/relativeLayout"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:id="@+id/relativeLayout" >
+        tools:context=".SequenceElementFragment">
 
         <EditText
+            android:id="@+id/editText_note_top"
+            style="@style/TextAppearance.AppCompat.Widget.PopupMenu.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/editText_note_top"
-            android:autoText="false"
-            android:elegantTextHeight="true"
-            android:layout_alignParentTop="false"
-            android:singleLine="false"
-            android:longClickable="false"
-            android:alpha="0.5"
-            android:textIsSelectable="false"
-            android:layout_centerVertical="true"
             android:layout_alignParentEnd="false"
             android:layout_alignParentRight="false"
-            android:editable="true"
-            android:inputType="text"
-            android:enabled="true"
-            android:hint="@string/dots"
-            android:textStyle="italic"
-            android:visibility="visible"
-            android:selectAllOnFocus="true"
-            style="@style/TextAppearance.AppCompat.Widget.PopupMenu.Small"
-            android:gravity="left|start"
+            android:layout_alignParentTop="false"
+            android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/imageView_player_top"
-            android:lines="2" />
+            android:alpha="0.5"
+            android:autoText="false"
+            android:editable="true"
+            android:elegantTextHeight="true"
+            android:enabled="true"
+            android:gravity="left|start"
+            android:hint="@string/dots"
+            android:inputType="text"
+            android:lines="2"
+            android:longClickable="false"
+            android:selectAllOnFocus="true"
+            android:singleLine="false"
+            android:textIsSelectable="false"
+            android:textStyle="italic"
+            android:visibility="visible" />
 
         <view
+            android:id="@+id/imageView_player_top"
+            class="com.mm.caju.CajuMovIconView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            class="com.mm.caju.CajuMovIconView"
-            android:id="@+id/imageView_player_top"
-            android:layout_toRightOf="@+id/textView_time"
             android:layout_centerVertical="true"
+            android:layout_toRightOf="@+id/textView_time"
             android:src="@mipmap/ic_mov_cont" />
 
         <TextView
+            android:id="@+id/textView_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:textAppearance="?android:attr/textAppearanceSmall"
-            android:text="@string/dots"
             android:layout_centerInParent="true"
-            android:id="@+id/textView_time"
-            android:padding="@dimen/abc_button_padding_vertical_material" />
+            android:gravity="center_horizontal"
+            android:padding="@dimen/abc_action_bar_default_padding_material"
+            android:text="@string/dots"
+            android:textAppearance="?android:attr/textAppearanceSmall" />
 
         <view
+            android:id="@+id/imageView_player_bot"
+            class="com.mm.caju.CajuMovIconView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            class="com.mm.caju.CajuMovIconView"
-            android:id="@+id/imageView_player_bot"
-            android:src="@mipmap/ic_mov_cont"
+            android:layout_centerVertical="true"
             android:layout_toLeftOf="@+id/textView_time"
-            android:layout_centerVertical="true" />
+            android:src="@mipmap/ic_mov_cont" />
 
         <EditText
+            android:id="@+id/editText_note_bot"
+            style="@style/Base.TextAppearance.AppCompat.Widget.PopupMenu.Small"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/editText_note_bot"
-            android:autoText="false"
-            android:elegantTextHeight="true"
-            android:layout_alignParentTop="false"
-            android:singleLine="false"
-            android:longClickable="false"
-            android:alpha="0.5"
-            android:textIsSelectable="false"
-            android:layout_centerVertical="true"
-            android:layout_alignParentStart="false"
             android:layout_alignParentLeft="false"
+            android:layout_alignParentStart="false"
+            android:layout_alignParentTop="false"
+            android:layout_centerVertical="true"
+            android:layout_toLeftOf="@+id/imageView_player_bot"
+            android:alpha="0.5"
+            android:autoText="false"
             android:editable="true"
+            android:elegantTextHeight="true"
+            android:enabled="true"
+            android:gravity="end|right"
             android:hint="@string/dots"
             android:inputType="text"
-            android:enabled="true"
-            android:textStyle="italic"
-            android:visibility="visible"
-            android:selectAllOnFocus="true"
-            style="@style/Base.TextAppearance.AppCompat.Widget.PopupMenu.Small"
+            android:lines="2"
+            android:longClickable="false"
             android:nestedScrollingEnabled="false"
-            android:gravity="end|right"
-            android:layout_toLeftOf="@+id/imageView_player_bot"
-            android:lines="2" />
+            android:selectAllOnFocus="true"
+            android:singleLine="false"
+            android:textIsSelectable="false"
+            android:textStyle="italic"
+            android:visibility="visible" />
 
     </RelativeLayout>
 
